@@ -1,11 +1,10 @@
+import "dotenv/config";
+
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 const app = express();
-
-const port = 3000;
-const SECRET_KEY = "123456";
 
 app.use(express.json());
 
@@ -13,6 +12,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+console.log(process.env.SECRET_KEY);
 app.post("/login", (req, res) => {
   const user = {
     id: 1,
@@ -20,14 +20,10 @@ app.post("/login", (req, res) => {
     email: "test@example.com"
   };
 
-  jwt.sign(
-    { user },
-    SECRET_KEY,
-    (err: Error | null, token: string | undefined) => {
-      if (err) return res.status(500).json({ error: "Error generating token" });
-      res.json({ token });
-    }
-  );
+  jwt.sign({ user }, "", (err: Error | null, token: string | undefined) => {
+    if (err) return res.status(500).json({ error: "Error generating token" });
+    res.json({ token });
+  });
 });
 
 // Verify token and set it to local storage if valid
@@ -45,12 +41,16 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
   const [, token] = bearerHeader.split(" ");
   if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, SECRET_KEY, (err: Error | null, authData: unknown) => {
-    if (err) return res.sendStatus(403); // token invalid or expired
-    next();
-  });
+  jwt.verify(
+    token,
+    process.env.SECRET_KEY!,
+    (err: Error | null, authData: unknown) => {
+      if (err) return res.sendStatus(403); // token invalid or expired
+      next();
+    }
+  );
 }
 
-app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Listening at http://localhost:${process.env.PORT}`);
 });
