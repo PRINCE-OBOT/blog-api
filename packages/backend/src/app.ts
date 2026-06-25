@@ -2,31 +2,50 @@ import "dotenv/config";
 
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
+import { router } from "./routes/index";
+import { prisma } from "./lib/prisma";
 
 const app = express();
 
-app.use(express.json());
+const INVALID_LOGIN_MSG = "Invalid username or password";
+
+app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-console.log(process.env.SECRET_KEY);
-app.post("/login", (req, res) => {
-  const user = {
-    id: 1,
-    username: "test",
-    email: "test@example.com"
-  };
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 
-  jwt.sign({ user }, "", (err: Error | null, token: string | undefined) => {
-    if (err) return res.status(500).json({ error: "Error generating token" });
-    res.json({ token });
+  const user = await prisma.user.findUnique({
+    where: { username }
   });
+
+  if (!user) return res.status(401).json({ message: INVALID_LOGIN_MSG });
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) return res.status(401).json({ message: INVALID_LOGIN_MSG });
+
+  jwt.sign(
+    { user },
+    process.env.JWT_SECRET!,
+    (err: Error | null, token: string | undefined) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ message: "Error occurred while generating token" });
+      res.json({ token });
+    }
+  );
 });
 
 // Verify token and set it to local storage if valid
+app.use("/", router);
+
 app.use(verifyToken);
 
 app.get("/posts", (req, res) => {
@@ -43,7 +62,7 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
 
   jwt.verify(
     token,
-    process.env.SECRET_KEY!,
+    process.env.JWT_SECRET!,
     (err: Error | null, authData: unknown) => {
       if (err) return res.sendStatus(403); // token invalid or expired
       next();

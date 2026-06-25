@@ -2,12 +2,12 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
+    "rootDir": "./",
     "outDir": "./dist",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "NodeNext",
+    "module": "es2015",
     "target": "ES2020",
     "types": [],
     "esModuleInterop": true,
@@ -21,7 +21,7 @@
     "declaration": true,
     "declarationMap": true,
 
-    // "moduleResolution": "NodeNext",
+    "moduleResolution": "bundler",
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
