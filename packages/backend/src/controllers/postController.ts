@@ -70,4 +70,31 @@ const postController = [
   }
 ];
 
-export { postController };
+const validateUpdatePost = [
+  body("published")
+    .isBoolean()
+    .toBoolean()
+    .withMessage("Published status must be 'true' or 'false'")
+];
+
+const updateController = [
+  ...validateUpdatePost,
+  async (req: Request, res: Response) => {
+    const { published } = matchedData(req);
+
+    const postId = req.params.postId as string;
+
+    const updatePost = await prisma.post.update({
+      where: {
+        id: postId
+      },
+      data: {
+        published
+      }
+    });
+
+    res.json(updatePost);
+  }
+];
+
+export { postController, updateController };

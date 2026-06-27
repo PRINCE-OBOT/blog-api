@@ -9,6 +9,9 @@ import { router } from "./routes/index";
 import { prisma } from "./lib/prisma";
 import { loginController } from "./controllers/loginController";
 import * as signup from "./controllers/signupController";
+import { commentController } from "./controllers/commentController";
+import { commentLikeController } from "./controllers/commentLikeController";
+import { postLikeController } from "./controllers/postLikeController";
 
 const app = express();
 
@@ -44,6 +47,12 @@ app.post("/login", async (req, res) => {
 app.get("/login", loginController);
 
 app.post("/signup", signup.postController);
+
+app.post("/posts/:postId/comment", commentController);
+
+app.post("/posts/:postId/like", postLikeController);
+
+app.post("/comments/:commentId/like", commentLikeController);
 
 // Verify token and set it to local storage if valid
 app.use(verifyToken);

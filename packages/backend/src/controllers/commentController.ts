@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 
 import { prisma } from "../lib/prisma";
 
-const NOT_EMPTY_MSG = 'must not be empty'
+const NOT_EMPTY_MSG = "must not be empty";
 
 const validateComment = [
   body("content").trim().notEmpty().withMessage(`Comment ${NOT_EMPTY_MSG}`),
@@ -19,13 +19,13 @@ const commentController = [
       return res.status(400).json({ errors: errors.array() });
 
     const { content, username } = matchedData(req);
-    const postId = req.body.postId;
+    const postId = req.params.postId as string;
 
     const post = await prisma.comment.create({
       data: { content, username, postId }
     });
 
-    res.status(201).json(post);
+    res.status(200).json(post);
   }
 ];
 

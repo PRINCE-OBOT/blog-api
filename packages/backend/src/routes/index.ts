@@ -1,12 +1,11 @@
 import { Router } from "express";
 
-import { postController } from "../controllers/postController";
-import { commentController } from "../controllers/commentController";
+import * as post from "../controllers/postController";
 
 const router = Router();
 
-router.post("/post", postController);
+router.post("/post", post.postController);
 
-router.post("/comment", commentController);
+router.put("/posts/:postId", post.updateController);
 
 export { router };
