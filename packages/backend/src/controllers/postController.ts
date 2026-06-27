@@ -12,14 +12,20 @@ const HERO_IMG_LIMIT = 1024 * 1024 * 5;
 const upload = multer({ storage, limits: { fileSize: HERO_IMG_LIMIT } });
 
 const validatePost = [
-  body("title")
+  body("title").trim().notEmpty().withMessage("Title cannot be empty"),
+  body("subtitle")
+    .optional()
     .trim()
-    .isLength({ min: 1 })
-    .withMessage("Title cannot be empty"),
+    .notEmpty()
+    .withMessage("Subtitle not descriptive"),
   body("content")
     .trim()
     .isLength({ min: 5 })
-    .withMessage("Content not descriptive")
+    .withMessage("Content not descriptive"),
+  body("published")
+    .isBoolean()
+    .toBoolean()
+    .withMessage("Published status must be 'true' or 'false'")
 ];
 
 const postController = [
@@ -38,10 +44,9 @@ const postController = [
     if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
 
-    const { title, content } = matchedData(req);
-    const published = req.body.published === 'true' ? true : false
+    const { title, content, subtitle, published } = matchedData(req);
 
-    // fallback when hero_img is not provided
+    // fallback when hero_img is not selected by user
     let hero_img_url =
       "https://res.cloudinary.com/dikpfkrli/image/upload/v1780727718/cld-sample-3.jpg";
 
@@ -51,7 +56,14 @@ const postController = [
     }
 
     const post = await prisma.post.create({
-      data: { title, content, authorId: req.user.id, hero_img_url, published }
+      data: {
+        title,
+        subtitle,
+        content,
+        authorId: req.user.id,
+        hero_img_url,
+        published
+      }
     });
 
     res.status(201).json(post);
