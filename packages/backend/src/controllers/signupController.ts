@@ -50,8 +50,5 @@ const postController = [
   }
 ];
 
-const getController = (req: Request, res: Response) => {
-  res.json({ message: "Sign up page" });
-};
 
-export { getController, postController };
+export { postController };

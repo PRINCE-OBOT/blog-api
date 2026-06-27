@@ -7,16 +7,14 @@ import jwt from "jsonwebtoken";
 
 import { router } from "./routes/index";
 import { prisma } from "./lib/prisma";
+import { loginController } from "./controllers/loginController";
+import * as signup from "./controllers/signupController";
 
 const app = express();
 
 const INVALID_LOGIN_MSG = "Invalid username or password";
 
 app.use(express.urlencoded({ extended: false }));
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -43,14 +41,14 @@ app.post("/login", async (req, res) => {
   );
 });
 
-// Verify token and set it to local storage if valid
-app.use("/", router);
+app.get("/login", loginController);
 
+app.post("/signup", signup.postController);
+
+// Verify token and set it to local storage if valid
 app.use(verifyToken);
 
-app.get("/posts", (req, res) => {
-  res.json({ message: "Post created" });
-});
+app.use("/", router);
 
 function verifyToken(req: Request, res: Response, next: NextFunction) {
   const bearerHeader = req.headers["authorization"];
@@ -60,14 +58,17 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
   const [, token] = bearerHeader.split(" ");
   if (!token) return res.sendStatus(401);
 
-  jwt.verify(
-    token,
-    process.env.JWT_SECRET!,
-    (err: Error | null, authData: unknown) => {
-      if (err) return res.sendStatus(403); // token invalid or expired
-      next();
-    }
-  );
+  try {
+    const payload = jwt.verify(
+      token,
+      process.env.JWT_SECRET!
+    ) as Express.JWTPayload;
+
+    req.user = payload.user;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
 }
 
 app.listen(process.env.PORT, () => {
