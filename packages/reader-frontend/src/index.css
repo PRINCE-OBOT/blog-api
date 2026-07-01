@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand:   #2563EB;
+  --color-ink:     #0A0A0A;
+  --color-parchment: #F0EEE8;
+  --color-muted:   #C8C4BC;
+  --color-slate:   #6B7280;
+  --color-border:  #1E1E1E;
+  --color-card:    #111111;
+  --color-danger:  #DC2626;
+  --color-success: #4ADE80;
+  --color-like:    #F87171;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body:    "Inter", sans-serif;
+}
+
+@keyframes like-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.45); }
+  70%  { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-like-pop { animation: like-pop 0.35s ease forwards; }
+.animate-spin     { animation: spin 0.7s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
