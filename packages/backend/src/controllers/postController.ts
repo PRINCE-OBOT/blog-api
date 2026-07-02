@@ -70,6 +70,23 @@ const postController = [
   }
 ];
 
+const getPostController = async (req: Request, res: Response) => {
+  const postId = req.params.postId as string;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+    include: {
+      author: true,
+      comments: true,
+      likes: true
+    }
+  });
+
+  res.json(post);
+};
+
 const validateUpdatePost = [
   body("published")
     .isBoolean()
@@ -97,4 +114,4 @@ const updateController = [
   }
 ];
 
-export { postController, updateController };
+export { postController, getPostController, updateController };

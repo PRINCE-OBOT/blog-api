@@ -9,22 +9,15 @@ export default function LikeButton({ likes, liked, animating, onClick }: LikeBut
   return (
     <button
       onClick={onClick}
-      disabled={liked}
-      aria-pressed={liked}
-      aria-label={liked ? `${likes} likes — already liked` : `Like this post (${likes} likes)`}
       className={`
         inline-flex items-center gap-2 border px-4 py-2 text-sm font-semibold font-display
         transition-colors duration-150 disabled:cursor-default
-        ${liked
-          ? "border-like text-like"
-          : "border-border text-slate hover:border-like hover:text-like"
-        }
+        border-border text-slate hover:border-like active:text-like
       `}
     >
       <svg
         className={`w-[18px] h-[18px] flex-shrink-0 transition-transform duration-150
           ${animating ? "animate-like-pop" : ""}
-          ${!liked ? "group-hover:scale-110" : ""}
         `}
         viewBox="0 0 24 24"
         fill={liked ? "currentColor" : "none"}

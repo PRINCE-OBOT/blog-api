@@ -3,6 +3,8 @@ import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
 import { Spinner, StatusScreen } from "../components/ui";
 import { usePost } from "../hooks/usePost";
+import { Period } from "../components/Period";
+import { format } from "date-fns";
 
 interface PostDetailProps {
   postId: string;
@@ -11,12 +13,22 @@ interface PostDetailProps {
 
 export default function PostDetail({ postId, onBack }: PostDetailProps) {
   const {
-    post, comments, likes, liked, likeAnim,
-    loading, error, handleLike, handleComment,
+    post,
+    likes,
+    liked,
+    likeAnim,
+    loading,
+    error,
+    handleLike,
+    handleComment
   } = usePost(postId);
 
   if (loading) {
-    return <StatusScreen><Spinner /></StatusScreen>;
+    return (
+      <StatusScreen>
+        <Spinner />
+      </StatusScreen>
+    );
   }
 
   if (error || !post) {
@@ -35,11 +47,19 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
     );
   }
 
-  const { title, tag, date, readTime, body } = post;
+  const {
+    title,
+    subtitle,
+    hero_img_url,
+    content,
+    author,
+    comments,
+    createdAt,
+    updatedAt
+  } = post;
 
   return (
-    <div className="max-w-[760px] mx-auto px-8 pt-10 pb-16">
-
+    <div  className="max-w-[760px] mx-auto px-8 pt-10 pb-16">
       {/* Back */}
       <button
         onClick={onBack}
@@ -55,22 +75,14 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
 
       {/* Header */}
       <header className="border-b border-border pb-10 mb-10">
-        {tag && (
-          <span className="inline-block font-display text-[11px] font-semibold tracking-widest uppercase text-brand border border-brand px-2 py-0.5 mb-3">
-            {tag}
-          </span>
-        )}
-
         <h1 className="font-display font-bold leading-tight tracking-[-0.03em] text-[clamp(1.8rem,4vw,2.8rem)] mb-4 text-parchment">
           {title}
         </h1>
+        <h4 className="text-slate font-bold leading-tight">{subtitle}</h4>
 
-        <div className="flex items-center gap-2 text-slate text-xs font-display">
-          <span>{date}</span>
-          <span className="w-1 h-1 rounded-full bg-slate" aria-hidden="true" />
-          <span>{readTime} min read</span>
-          <span className="w-1 h-1 rounded-full bg-slate" aria-hidden="true" />
-          <span>{comments.length} comments</span>
+        <div className="flex flex-col gap-1 text-slate text-xs font-display pt-5">
+          <div>{format(createdAt, "MMMM d, yyyy")}</div>
+          <div>{format(updatedAt, "MMMM d, yyyy")}</div>
         </div>
       </header>
 
@@ -87,7 +99,7 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
           [&_code]:font-mono [&_code]:text-[#7DD3FC]
           [&_a]:text-brand [&_a]:underline-offset-4
         "
-        dangerouslySetInnerHTML={{ __html: body }}
+        dangerouslySetInnerHTML={{ __html: content }}
       />
 
       {/* Like */}
@@ -112,7 +124,6 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
         <CommentList comments={comments} />
         <CommentForm onSubmit={handleComment} />
       </section>
-
     </div>
   );
 }
