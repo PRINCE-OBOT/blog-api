@@ -5,7 +5,7 @@ interface CommentFormProps {
   onSubmit: (data: CommentFormData) => Promise<unknown>;
 }
 
-const EMPTY: CommentFormData = { name: "", email: "", body: "" };
+const EMPTY: CommentFormData = { username: "", content: "" };
 
 const inputClass = `
   w-full bg-ink border border-border text-parchment
@@ -43,7 +43,7 @@ export default function CommentForm({ onSubmit }: CommentFormProps) {
     }
   }
 
-  const isDisabled = submitting || !fields.name || !fields.email || !fields.body;
+  const isDisabled = submitting || !fields.username || !fields.content
 
   return (
     <div className="border border-border p-7 mt-8">
@@ -72,49 +72,38 @@ export default function CommentForm({ onSubmit }: CommentFormProps) {
       <form onSubmit={handleSubmit} noValidate>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="cf-name" className="font-display text-[11px] font-semibold tracking-widest uppercase text-slate">
-              Name
+            <label
+              htmlFor="username"
+              className="font-display text-[11px] font-semibold tracking-widest uppercase text-slate"
+            >
+              Username
             </label>
             <input
-              id="cf-name"
+              id="username"
               className={inputClass}
               type="text"
-              name="name"
-              value={fields.name}
+              name="username"
+              value={fields.username}
               onChange={handleChange}
-              placeholder="Your name"
+              placeholder="Username"
               required
               autoComplete="name"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="cf-email" className="font-display text-[11px] font-semibold tracking-widest uppercase text-slate">
-              Email
-            </label>
-            <input
-              id="cf-email"
-              className={inputClass}
-              type="email"
-              name="email"
-              value={fields.email}
-              onChange={handleChange}
-              placeholder="your@email.com"
-              required
-              autoComplete="email"
             />
           </div>
         </div>
 
         <div className="flex flex-col gap-1.5 mb-5">
-          <label htmlFor="cf-body" className="font-display text-[11px] font-semibold tracking-widest uppercase text-slate">
-            Comment
+          <label
+            htmlFor="content"
+            className="font-display text-[11px] font-semibold tracking-widest uppercase text-slate"
+          >
+            Comment Content
           </label>
           <textarea
-            id="cf-body"
+            id="content"
             className={`${inputClass} resize-y min-h-[110px]`}
-            name="body"
-            value={fields.body}
+            name="content"
+            value={fields.content}
             onChange={handleChange}
             placeholder="What are your thoughts?"
             required

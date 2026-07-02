@@ -57,7 +57,6 @@ export function usePost(postId: string): UsePostResult {
     try {
       await likePost(postId);
     } catch {
-      // Revert on failure
       setLikes((n) => n - 1);
       setLiked(false);
     }

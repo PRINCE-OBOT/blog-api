@@ -32,7 +32,6 @@ export interface Author {
 }
 
 export interface CommentFormData {
-  name: string;
-  email: string;
-  body: string;
+  username: string;
+  content: string;
 }

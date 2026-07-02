@@ -13,18 +13,18 @@ interface CommentItemProps {
 }
 
 function CommentItem({ comment }: CommentItemProps) {
-  const { authorName, createdAt, body } = comment;
+  const { username, createdAt, content } = comment;
   return (
     <div className="group border-l-[3px] border-border hover:border-brand pl-5 pb-6 transition-colors duration-150">
       <div className="flex items-baseline gap-3 mb-1">
         <span className="font-display font-semibold text-sm text-parchment">
-          {authorName}
+          {username}
         </span>
         <time className="text-slate text-xs font-display" dateTime={createdAt}>
           {formatDate(createdAt)}
         </time>
       </div>
-      <p className="text-muted text-sm leading-relaxed">{body}</p>
+      <p className="text-muted text-sm leading-relaxed">{content}</p>
     </div>
   );
 }

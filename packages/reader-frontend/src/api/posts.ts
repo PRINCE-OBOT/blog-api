@@ -32,7 +32,7 @@ export const createComment = (
   postId: string,
   data: CommentFormData
 ): Promise<Comment> =>
-  request<Comment>(`/posts/${postId}/comments`, {
+  request<Comment>(`/posts/${postId}/comment`, {
     method: "POST",
     body: JSON.stringify(data),
   });

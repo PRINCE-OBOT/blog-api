@@ -72,7 +72,7 @@ export default function PostCard({
           {content.length > 200 && "..."}
         </p>
 
-        <img src={hero_img_url} alt="blog_api_image_placeholder" />
+        <img src={hero_img_url} alt="blog_api_image_placeholder" className="h-60 object-cover" />
 
         <div className="flex flex-col gap-2 text-slate text-sm font-display mt-1">
           <span>Created: {format(createdAt, "MMMM d, yyyy")}</span>
