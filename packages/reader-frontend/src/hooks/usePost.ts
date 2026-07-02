@@ -46,6 +46,7 @@ export function usePost(postId: string): UsePostResult {
 
   useEffect(() => {
     setLikes(post?.likes.length || 0);
+    setComments(post?.comments || [])
   }, [post]);
 
   const handleLike = useCallback(async (): Promise<void> => {

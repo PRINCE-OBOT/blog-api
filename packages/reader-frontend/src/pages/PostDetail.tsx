@@ -1,10 +1,14 @@
+import "prismjs/themes/prism.css";
+
 import LikeButton from "../components/LikeButton";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
 import { Spinner, StatusScreen } from "../components/ui";
 import { usePost } from "../hooks/usePost";
+import Prism from "prismjs";
 import { Period } from "../components/Period";
 import { format } from "date-fns";
+import { useEffect } from "react";
 
 interface PostDetailProps {
   postId: string;
@@ -15,6 +19,7 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
   const {
     post,
     likes,
+    comments,
     liked,
     likeAnim,
     loading,
@@ -22,6 +27,14 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
     handleLike,
     handleComment
   } = usePost(postId);
+
+  const content = post?.content || "";
+
+  useEffect(() => {
+    if (content) {
+      Prism.highlightAll();
+    }
+  }, [content]);
 
   if (loading) {
     return (
@@ -51,15 +64,13 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
     title,
     subtitle,
     hero_img_url,
-    content,
     author,
-    comments,
     createdAt,
     updatedAt
   } = post;
 
   return (
-    <div  className="max-w-[760px] mx-auto px-8 pt-10 pb-16">
+    <div className="max-w-[760px] mx-auto px-8 pt-10 pb-16">
       {/* Back */}
       <button
         onClick={onBack}
@@ -86,9 +97,10 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
         </div>
       </header>
 
-      {/* Body */}
+      {/* Content */}
       <div
         className="
+        prose
           text-muted leading-[1.8] text-base border-b border-border pb-10 mb-8
           [&_p]:mb-6
           [&_h2]:font-display [&_h2]:font-bold [&_h2]:text-parchment
@@ -97,8 +109,7 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
           [&_pre]:border-l-brand [&_pre]:px-6 [&_pre]:py-5 [&_pre]:my-6
           [&_pre]:overflow-x-auto [&_pre]:text-[0.84rem] [&_pre]:leading-relaxed
           [&_code]:font-mono [&_code]:text-[#7DD3FC]
-          [&_a]:text-brand [&_a]:underline-offset-4
-        "
+          [&_a]:text-brand [&_a]:underline-offset-4"
         dangerouslySetInnerHTML={{ __html: content }}
       />
 
