@@ -9,7 +9,6 @@ import { format } from "date-fns";
 import { useEffect } from "react";
 
 import Prism from "prismjs";
-// css style for code block - currently in dark theme
 
 interface PostDetailProps {
   postId: string;
@@ -88,14 +87,21 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
 
       {/* Header */}
       <header className="border-b border-border pb-10 mb-10">
-        <h1 className="font-display font-bold leading-tight tracking-[-0.03em] text-[clamp(1.8rem,4vw,2.8rem)] mb-4 text-parchment">
+        <img
+          src={hero_img_url}
+          alt="blog_api_image_placeholder"
+          className="h-40 w-full object-cover"
+        />
+
+        <h1 className="pt-10 font-display font-bold leading-tight tracking-[-0.03em] text-[clamp(1.8rem,4vw,2.8rem)] mb-4 text-parchment">
           {title}
         </h1>
         <h4 className="text-slate font-bold leading-tight">{subtitle}</h4>
 
-        <div className="flex flex-col gap-1 text-slate text-xs font-display pt-5">
-          <div>{format(createdAt, "MMMM d, yyyy")}</div>
-          <div>{format(updatedAt, "MMMM d, yyyy")}</div>
+        <div className="flex items-center flex-wrap gap-1.5 text-slate text-xs font-display pt-5">
+          <div>Created {format(createdAt, "MMMM d, yyyy")}</div>
+          <Period />
+          <div>Last updated {format(updatedAt, "MMMM d, yyyy")}</div>
         </div>
       </header>
 

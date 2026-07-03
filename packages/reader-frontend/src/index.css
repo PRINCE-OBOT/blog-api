@@ -1,7 +1,8 @@
 @import "tailwindcss";
 /* Formatting the content of the post, like color of header and paragraph */
-@import "prismjs/themes/prism-tomorrow.css";
 @plugin "@tailwindcss/typography";
+/* css style for code block - currently in dark theme */
+@import "prismjs/themes/prism-tomorrow.css";
 
 
 @theme {
