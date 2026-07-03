@@ -3,6 +3,9 @@ import type { Request, Response } from "express";
 
 export const homepageController = async (req: Request, res: Response) => {
   const posts = await prisma.post.findMany({
+    orderBy: {
+      createdAt: "desc"
+    },
     include: {
       author: true,
       comments: true,

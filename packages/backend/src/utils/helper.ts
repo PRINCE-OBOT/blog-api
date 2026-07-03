@@ -7,7 +7,7 @@ export function uploadToCloudinary(file: Express.Multer.File) {
   return new Promise<UploadApiResponse>((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        resource_type: "auto",
+        resource_type: "image",
         folder: "drive"
       },
       (
