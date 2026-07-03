@@ -10,7 +10,6 @@ import { useEffect } from "react";
 
 import Prism from "prismjs";
 // css style for code block - currently in dark theme
-import "prismjs/themes/prism-tomorrow.css";
 
 interface PostDetailProps {
   postId: string;

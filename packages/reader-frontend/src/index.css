@@ -1,6 +1,8 @@
 @import "tailwindcss";
 /* Formatting the content of the post, like color of header and paragraph */
+@import "prismjs/themes/prism-tomorrow.css";
 @plugin "@tailwindcss/typography";
+
 
 @theme {
   --color-brand:   #2563EB;

@@ -1,3 +1,6 @@
+import Prism from "prismjs";
+import { useEffect } from "react";
+
 import PostCard from "../components/PostCard";
 import { Spinner, StatusScreen } from "../components/ui";
 import { usePosts } from "../hooks/usePosts";
@@ -8,6 +11,13 @@ interface PostListProps {
 
 export default function PostList({ onSelectPost }: PostListProps) {
   const { posts, loading, error } = usePosts();
+
+  useEffect(() => {
+    if (posts) {
+      // Activate the style for code block in all code blocks
+      Prism.highlightAll();
+    }
+  }, [posts]);
 
   if (loading) {
     return (

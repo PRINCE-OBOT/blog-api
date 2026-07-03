@@ -50,9 +50,7 @@ export default function PostCard({
       tabIndex={0}
       aria-label={`Read: ${title}`}
     >
-      <div
-        className={`p-8 flex flex-col gap-3 flex-1`}
-      >
+      <div className={`p-8 flex flex-col gap-3 flex-1`}>
         <div>
           <span className="text-slate text-xs font-display mt-1">By</span>{" "}
           <span>
@@ -60,19 +58,34 @@ export default function PostCard({
           </span>
         </div>
         <h2
-          className={`font-display font-bold leading-tight tracking-tight text-parchment text-lg`}
+          className={`font-display font-bold leading-tight tracking-tight text-parchment text-lg p-b-0`}
         >
           {title}
         </h2>
         {subtitle && (
           <h4 className={`text-slate font-bold leading-tight`}>{subtitle}</h4>
         )}
-        <p className="text-slate text-sm leading-relaxed line-clamp-3">
-          {content.slice(0, 200)}
-          {content.length > 200 && "..."}
-        </p>
+        <p
+          className="
+          prose prose-invert
+          prose-headings:text-sm
+          prose-p:text-parchment
+          prose-a:text-brand
+          prose-strong:text-parchment
+          [&_pre::-webkit-scrollbar]:hidden
+          max-w-none
+          pt-4
+          "
+          dangerouslySetInnerHTML={{
+            __html: `${content.slice(0, 200)}${content.length > 200 && "..."}`
+          }}
+        />
 
-        <img src={hero_img_url} alt="blog_api_image_placeholder" className="h-60 object-cover" />
+        <img
+          src={hero_img_url}
+          alt="blog_api_image_placeholder"
+          className="h-60 object-cover"
+        />
 
         <div className="flex flex-col gap-2 text-slate text-sm font-display mt-1">
           <span>Created: {format(createdAt, "MMMM d, yyyy")}</span>
