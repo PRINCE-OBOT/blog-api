@@ -102,7 +102,10 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
           <div>Created {format(createdAt, "MMMM d, yyyy")}</div>
           <Period />
           <div>Last updated {format(updatedAt, "MMMM d, yyyy")}</div>
+          <Period />
+          <div>Author: {author.firstName} {author.lastName}</div>
         </div>
+
       </header>
 
       {/* Content */}

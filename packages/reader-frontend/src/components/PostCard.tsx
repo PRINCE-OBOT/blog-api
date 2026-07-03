@@ -77,14 +77,14 @@ export default function PostCard({
           pt-4
           "
           dangerouslySetInnerHTML={{
-            __html: `${content.slice(0, 200)}${content.length > 200 && "..."}`
+            __html: `${content.slice(0, 100)}${content.length > 100 && "..."}`
           }}
         />
 
         <img
           src={hero_img_url}
           alt="blog_api_image_placeholder"
-          className="h-60 object-cover"
+          className="h-40 object-cover"
         />
 
         <div className="flex flex-col gap-2 text-slate text-sm font-display mt-1">
