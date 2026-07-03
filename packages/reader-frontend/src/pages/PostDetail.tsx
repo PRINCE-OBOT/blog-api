@@ -1,14 +1,16 @@
-import "prismjs/themes/prism.css";
 
 import LikeButton from "../components/LikeButton";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
 import { Spinner, StatusScreen } from "../components/ui";
 import { usePost } from "../hooks/usePost";
-import Prism from "prismjs";
 import { Period } from "../components/Period";
 import { format } from "date-fns";
 import { useEffect } from "react";
+
+import Prism from "prismjs";
+// css style for code block - currently in dark theme
+import "prismjs/themes/prism-tomorrow.css";
 
 interface PostDetailProps {
   postId: string;
@@ -32,6 +34,7 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
 
   useEffect(() => {
     if (content) {
+      // Activate the style for code block in all code blocks
       Prism.highlightAll();
     }
   }, [content]);
@@ -99,17 +102,13 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
 
       {/* Content */}
       <div
-        className="
-        prose
-          text-muted leading-[1.8] text-base border-b border-border pb-10 mb-8
-          [&_p]:mb-6
-          [&_h2]:font-display [&_h2]:font-bold [&_h2]:text-parchment
-          [&_h2]:text-[1.35rem] [&_h2]:tracking-tight [&_h2]:mt-10 [&_h2]:mb-4
-          [&_pre]:bg-card [&_pre]:border [&_pre]:border-border [&_pre]:border-l-[3px]
-          [&_pre]:border-l-brand [&_pre]:px-6 [&_pre]:py-5 [&_pre]:my-6
-          [&_pre]:overflow-x-auto [&_pre]:text-[0.84rem] [&_pre]:leading-relaxed
-          [&_code]:font-mono [&_code]:text-[#7DD3FC]
-          [&_a]:text-brand [&_a]:underline-offset-4"
+        className="prose prose-invert
+        prose-headings:text-parchment
+        prose-p:text-parchment
+        prose-a:text-brand
+        prose-strong:text-parchment
+        [&_pre::-webkit-scrollbar]:hidden
+        max-w-none"
         dangerouslySetInnerHTML={{ __html: content }}
       />
 

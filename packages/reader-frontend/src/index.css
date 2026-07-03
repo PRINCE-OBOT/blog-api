@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Formatting the content of the post, like color of header and paragraph */
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-brand:   #2563EB;
