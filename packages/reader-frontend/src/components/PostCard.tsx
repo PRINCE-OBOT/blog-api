@@ -1,6 +1,7 @@
 import { MessageCircle, HeartPlus } from 'lucide-react'
 import type { Author, Post } from "../types";
 import { format } from 'date-fns';
+import { NavLink } from 'react-router';
 
 
 interface PostCardProps {
@@ -10,7 +11,6 @@ interface PostCardProps {
 
 export default function PostCard({
   post,
-  onSelect,
 }: PostCardProps) {
   const {
     id,
@@ -27,13 +27,6 @@ export default function PostCard({
 
   const { firstName, lastName }: Author = author;
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onSelect(id);
-    }
-  }
-
   const baseCard = `
     group relative border-r border-b border-border cursor-pointer
     transition-colors duration-150 hover:bg-card
@@ -42,12 +35,10 @@ export default function PostCard({
   `;
 
   return (
-    <div
+    <NavLink
       className={`${baseCard}`}
-      onClick={() => onSelect(id)}
-      onKeyDown={handleKeyDown}
+      to={`/posts/${id}/post`}
       role="button"
-      tabIndex={0}
       aria-label={`Read: ${title}`}
     >
       <div className={`p-8 flex flex-col gap-3 flex-1`}>
@@ -114,6 +105,6 @@ export default function PostCard({
           Read post →
         </span>
       </div>
-    </div>
+    </NavLink>
   );
 }

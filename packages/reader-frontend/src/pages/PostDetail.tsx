@@ -1,21 +1,23 @@
+import { NavLink, useParams } from "react-router";
+import { format } from "date-fns";
+import { useEffect } from "react";
+import Prism from "prismjs";
 
 import LikeButton from "../components/LikeButton";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
 import { Spinner, StatusScreen } from "../components/ui";
-import { usePost } from "../hooks/usePost";
 import { Period } from "../components/Period";
-import { format } from "date-fns";
-import { useEffect } from "react";
 
-import Prism from "prismjs";
+import { usePost } from "../hooks/usePost";
 
-interface PostDetailProps {
+type PostIdProps = {
   postId: string;
-  onBack: () => void;
-}
+};
 
-export default function PostDetail({ postId, onBack }: PostDetailProps) {
+export default function PostDetail() {
+  const { postId } = useParams<PostIdProps>();
+
   const {
     post,
     likes,
@@ -26,7 +28,7 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
     error,
     handleLike,
     handleComment
-  } = usePost(postId);
+  } = usePost(postId!);
 
   const content = post?.content || "";
 
@@ -51,30 +53,23 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
         <p className="text-like font-display text-sm">
           {error ?? "Post not found."}
         </p>
-        <button
-          onClick={onBack}
+        <NavLink
+          to="/"
           className="text-slate font-display text-xs tracking-wider uppercase hover:text-parchment transition-colors"
         >
           ← Back to posts
-        </button>
+        </NavLink>
       </StatusScreen>
     );
   }
 
-  const {
-    title,
-    subtitle,
-    hero_img_url,
-    author,
-    createdAt,
-    updatedAt
-  } = post;
+  const { title, subtitle, hero_img_url, author, createdAt, updatedAt } = post;
 
   return (
     <div className="max-w-[760px] mx-auto px-8 pt-10 pb-16">
       {/* Back */}
-      <button
-        onClick={onBack}
+      <NavLink
+        to='/'
         aria-label="Back to all posts"
         className="
           inline-flex items-center gap-1.5 text-slate font-display
@@ -83,7 +78,7 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
         "
       >
         ← All Posts
-      </button>
+      </NavLink>
 
       {/* Header */}
       <header className="border-b border-border pb-10 mb-10">
@@ -103,9 +98,10 @@ export default function PostDetail({ postId, onBack }: PostDetailProps) {
           <Period />
           <div>Last updated {format(updatedAt, "MMMM d, yyyy")}</div>
           <Period />
-          <div>Author: {author.firstName} {author.lastName}</div>
+          <div>
+            Author: {author.firstName} {author.lastName}
+          </div>
         </div>
-
       </header>
 
       {/* Content */}

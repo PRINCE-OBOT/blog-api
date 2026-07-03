@@ -1,5 +1,6 @@
 import Prism from "prismjs";
 import { useEffect } from "react";
+import { useOutletContext } from "react-router";
 
 import PostCard from "../components/PostCard";
 import { Spinner, StatusScreen } from "../components/ui";
@@ -9,7 +10,9 @@ interface PostListProps {
   onSelectPost: (id: string) => void;
 }
 
-export default function PostList({ onSelectPost }: PostListProps) {
+export default function PostList() {
+  const { onSelectPost }: PostListProps = useOutletContext();
+  
   const { posts, loading, error } = usePosts();
 
   useEffect(() => {
