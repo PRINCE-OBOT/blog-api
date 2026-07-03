@@ -4,40 +4,62 @@
 /* css style for code block - currently in dark theme */
 @import "prismjs/themes/prism-tomorrow.css";
 
-
 @theme {
-  --color-brand:   #2563EB;
-  --color-ink:     #0A0A0A;
-  --color-parchment: #F0EEE8;
-  --color-muted:   #C8C4BC;
-  --color-slate:   #6B7280;
-  --color-border:  #1E1E1E;
-  --color-card:    #111111;
-  --color-danger:  #DC2626;
-  --color-success: #4ADE80;
-  --color-like:    #F87171;
+  --color-brand: #2563eb;
+  --color-ink: #0a0a0a;
+  --color-parchment: #f0eee8;
+  --color-muted: #c8c4bc;
+  --color-slate: #6b7280;
+  --color-border: #1e1e1e;
+  --color-card: #111111;
+  --color-danger: #dc2626;
+  --color-success: #4ade80;
+  --color-like: #f87171;
+  
+  --shadow-card: 0 0 12px rgba(255, 255, 255, 0.06);
 
   --font-display: "Space Grotesk", sans-serif;
-  --font-body:    "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+
 }
 
 @keyframes like-pop {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.45); }
-  70%  { transform: scale(0.88); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.45);
+  }
+  70% {
+    transform: scale(0.88);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.animate-like-pop { animation: like-pop 0.35s ease forwards; }
-.animate-spin     { animation: spin 0.7s linear infinite; }
+.animate-like-pop {
+  animation: like-pop 0.35s ease forwards;
+}
+.animate-spin {
+  animation: spin 0.7s linear infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+body {
+  background-color: var(--color-ink);
 }

@@ -28,10 +28,10 @@ export default function PostCard({
   const { firstName, lastName }: Author = author;
 
   const baseCard = `
-    group relative border-r border-b border-border cursor-pointer
+    group relative cursor-pointer
     transition-colors duration-150 hover:bg-card
     focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand
-    flex flex-col
+    flex flex-col shadow-card rounded-xl p-4
   `;
 
   return (
@@ -41,7 +41,9 @@ export default function PostCard({
       role="button"
       aria-label={`Read: ${title}`}
     >
-      <div className={`p-8 flex flex-col gap-2 flex-1`}>
+      <div
+        className={`p-3 flex flex-col gap-2 flex-1`}
+      >
         <div>
           <span className="text-slate text-xs font-display mt-1">By</span>{" "}
           <span>
@@ -54,7 +56,9 @@ export default function PostCard({
           {title}
         </h2>
         {subtitle && (
-          <h4 className={`text-slate font-bold leading-tight pb-4`}>{subtitle}</h4>
+          <h4 className={`text-slate font-bold leading-tight pb-4`}>
+            {subtitle}
+          </h4>
         )}
         <p
           className="
@@ -67,9 +71,7 @@ export default function PostCard({
           prose-strong:text-parchment
           [&_pre::-webkit-scrollbar]:hidden
           max-w-none
-          border-l-2
-          pl-2
-          rounded-lg
+          border-l-2 pl-2 rounded-lg
           "
           dangerouslySetInnerHTML={{
             __html: `${content.slice(0, 100)}${content.length > 100 && "..."}`

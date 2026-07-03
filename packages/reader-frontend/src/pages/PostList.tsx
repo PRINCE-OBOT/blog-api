@@ -12,7 +12,7 @@ interface PostListProps {
 
 export default function PostList() {
   const { onSelectPost }: PostListProps = useOutletContext();
-  
+
   const { posts, loading, error } = usePosts();
 
   useEffect(() => {
@@ -75,12 +75,12 @@ export default function PostList() {
       </div>
 
       {/* Posts */}
-      <div className="max-w-[1100px] mx-auto w-full px-8">
+      <div className="max-w-[1100px] mx-auto w-full px-2">
         <p className="font-display text-[11px] font-semibold tracking-[0.15em] uppercase text-slate py-7">
           Latest Posts
         </p>
 
-        <div className="flex flex-col border border-border w-[min(700px,100%)]">
+        <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(400px,100%),1fr))] border border-border p-2">
           {posts.map((post) => (
             <PostCard key={post.id} post={post} onSelect={onSelectPost} />
           ))}

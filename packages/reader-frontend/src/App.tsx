@@ -2,7 +2,7 @@ import { NavLink, Outlet } from "react-router";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-ink text-parchment font-body flex flex-col">
+    <div className="min-h-screen w-[min(1200px,100%)] mx-auto bg-ink text-parchment font-body flex flex-col">
       {/* Nav */}
       <nav className="sticky top-0 z-50 bg-ink border-b border-border h-[60px] px-8 flex items-center justify-between">
         <NavLink
@@ -13,7 +13,7 @@ export default function App() {
         </NavLink>
 
         <ul className="flex items-center gap-8 list-none">
-          {[{text: "Posts", path: "/"}].map((link, index) => (
+          {[{ text: "Posts", path: "/" }].map((link, index) => (
             <li key={index}>
               <NavLink
                 to={link.path}
