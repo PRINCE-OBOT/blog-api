@@ -41,7 +41,7 @@ export default function PostCard({
       role="button"
       aria-label={`Read: ${title}`}
     >
-      <div className={`p-8 flex flex-col gap-3 flex-1`}>
+      <div className={`p-8 flex flex-col gap-2 flex-1`}>
         <div>
           <span className="text-slate text-xs font-display mt-1">By</span>{" "}
           <span>
@@ -54,18 +54,22 @@ export default function PostCard({
           {title}
         </h2>
         {subtitle && (
-          <h4 className={`text-slate font-bold leading-tight`}>{subtitle}</h4>
+          <h4 className={`text-slate font-bold leading-tight pb-4`}>{subtitle}</h4>
         )}
         <p
           className="
           prose prose-invert
           prose-headings:text-sm
+          prose-headings:text-slate 
+          prose-p:text-slate 
           prose-p:text-parchment
           prose-a:text-brand
           prose-strong:text-parchment
           [&_pre::-webkit-scrollbar]:hidden
           max-w-none
-          pt-4
+          border-l-2
+          pl-2
+          rounded-lg
           "
           dangerouslySetInnerHTML={{
             __html: `${content.slice(0, 100)}${content.length > 100 && "..."}`
