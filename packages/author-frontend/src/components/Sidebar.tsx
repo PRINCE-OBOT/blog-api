@@ -1,4 +1,5 @@
 import { useAuth } from "../context/AuthContext";
+import { Logo } from "./Logo";
 
 type View = "posts" | "new-post" | "edit-post";
 
@@ -49,9 +50,7 @@ export default function Sidebar({ currentView, onNavigate }: SidebarProps) {
 
       {/* Logo */}
       <div className="px-5 h-[60px] flex items-center border-b border-border flex-shrink-0">
-        <span className="font-display font-bold text-base tracking-[-0.02em] text-parchment">
-          DEV<span className="text-brand">//</span>LOG
-        </span>
+        <Logo/>
       </div>
 
       {/* Nav */}
