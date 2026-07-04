@@ -3,21 +3,26 @@ import { useAuth } from "../context/AuthContext";
 import { signup as signupApi } from "../api";
 import { Field, ErrorAlert } from "../components/ui";
 import type { SignupFormData } from "../types";
+import { Logo } from "../components/Logo";
 
 interface SignupPageProps {
   onGoLogin: () => void;
 }
 
 const EMPTY: SignupFormData = {
-  firstName: "", lastName: "", username: "", password: "", confirmPassword: "",
+  firstName: "",
+  lastName: "",
+  username: "",
+  password: "",
+  confirmPassword: ""
 };
 
 export default function SignupPage({ onGoLogin }: SignupPageProps) {
   const { login } = useAuth();
-  const [fields, setFields]         = useState<SignupFormData>(EMPTY);
-  const [errors, setErrors]         = useState<Partial<SignupFormData>>({});
+  const [fields, setFields] = useState<SignupFormData>(EMPTY);
+  const [errors, setErrors] = useState<Partial<SignupFormData>>({});
   const [serverError, setServerError] = useState<string | null>(null);
-  const [submitting, setSubmitting]   = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -28,10 +33,14 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
 
   function validate(): boolean {
     const newErrors: Partial<SignupFormData> = {};
-    if (!fields.firstName.trim()) newErrors.firstName = "Required";
-    if (!fields.lastName.trim())  newErrors.lastName  = "Required";
-    if (!fields.username.trim())  newErrors.username  = "Required";
-    if (fields.password.length < 6) newErrors.password = "At least 6 characters";
+
+  const { firstName, lastName, username, password } = fields
+  
+    if (!firstName.trim()) newErrors.firstName = "Required";
+    if (!lastName.trim()) newErrors.lastName = "Required";
+    if (!username.trim()) newErrors.username = "Required";
+    if (password.length < 6)
+      newErrors.password = "At least 6 characters";
     if (fields.password !== fields.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
     setErrors(newErrors);
@@ -44,8 +53,7 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
     setServerError(null);
     setSubmitting(true);
     try {
-      const { confirmPassword: _, ...payload } = fields;
-      const { token, user } = await signupApi(payload);
+      const { token, user } = await signupApi(fields);
       login(token, user);
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Signup failed.");
@@ -57,12 +65,9 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
   return (
     <div className="min-h-screen bg-ink flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
-
         {/* Logo */}
         <div className="mb-8">
-          <p className="font-display font-bold text-xl tracking-[-0.02em] text-parchment mb-1">
-            DEV<span className="text-brand">//</span>LOG
-          </p>
+          <Logo />
           <p className="font-display text-xs tracking-[0.08em] uppercase text-slate">
             Create your author account
           </p>
@@ -75,10 +80,16 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
           </h1>
 
           {serverError && (
-            <div className="mb-5"><ErrorAlert message={serverError} /></div>
+            <div className="mb-5">
+              <ErrorAlert message={serverError} />
+            </div>
           )}
 
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="flex flex-col gap-4"
+          >
             <div className="grid grid-cols-2 gap-3">
               <Field
                 id="firstName"
@@ -161,7 +172,6 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
             Sign in
           </button>
         </p>
-
       </div>
     </div>
   );

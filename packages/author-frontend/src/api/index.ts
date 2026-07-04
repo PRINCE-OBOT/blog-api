@@ -17,7 +17,6 @@ async function request<T>(
   options: RequestInit = {},
   requiresAuth = true
 ): Promise<T> {
-
   const headers: Record<string, string> = {
     "Content-Type": "application/json"
   };
@@ -48,9 +47,7 @@ export const login = (data: LoginFormData): Promise<AuthResponse> =>
     false
   );
 
-export const signup = (
-  data: Omit<SignupFormData, "confirmPassword">
-): Promise<AuthResponse> =>
+export const signup = (data: SignupFormData): Promise<AuthResponse> =>
   request<AuthResponse>(
     "/signup",
     {

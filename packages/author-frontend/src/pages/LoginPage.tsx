@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { login as loginApi } from "../api";
 import { Field, ErrorAlert } from "../components/ui";
+import { Logo } from "../components/Logo";
 
 interface LoginPageProps {
   onGoSignup: () => void;
@@ -14,8 +15,8 @@ export default function LoginPage({ onGoSignup }: LoginPageProps) {
   const [submitting, setSubmitting] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { id, value } = e.target;
-    setFields((prev) => ({ ...prev, [id]: value }));
+    const { name, value } = e.target;
+    setFields((prev) => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e: React.SubmitEvent) {
@@ -37,9 +38,7 @@ export default function LoginPage({ onGoSignup }: LoginPageProps) {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="mb-8">
-          <p className="font-display font-bold text-xl tracking-[-0.02em] text-parchment mb-1">
-            BLOG<span className="text-brand">-</span>API
-          </p>
+          <Logo />
           <p className="font-display text-xs tracking-[0.08em] uppercase text-slate">
             Author Access Only
           </p>
