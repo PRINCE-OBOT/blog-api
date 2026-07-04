@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand:     #2563EB;
+  --color-ink:       #0A0A0A;
+  --color-parchment: #F0EEE8;
+  --color-muted:     #C8C4BC;
+  --color-slate:     #6B7280;
+  --color-border:    #1E1E1E;
+  --color-card:      #111111;
+  --color-danger:    #DC2626;
+  --color-success:   #4ADE80;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body:    "Inter", sans-serif;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.animate-spin { animation: spin 0.7s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
