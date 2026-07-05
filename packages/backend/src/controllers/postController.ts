@@ -11,6 +11,9 @@ const HERO_IMG_LIMIT = 1024 * 1024 * 5;
 
 const upload = multer({ storage, limits: { fileSize: HERO_IMG_LIMIT } });
 
+let hero_img_url =
+  "https://res.cloudinary.com/dikpfkrli/image/upload/v1780727718/cld-sample-3.jpg";
+
 const validatePost = [
   body("title").trim().notEmpty().withMessage("Title cannot be empty"),
   body("subtitle")
@@ -47,8 +50,6 @@ const postController = [
     const { title, content, subtitle, published } = matchedData(req);
 
     // fallback when hero_img is not selected by user
-    let hero_img_url =
-      "https://res.cloudinary.com/dikpfkrli/image/upload/v1780727718/cld-sample-3.jpg";
 
     if (req.file) {
       const result = await uploadToCloudinary(req.file);
@@ -75,7 +76,7 @@ const getPostController = async (req: Request, res: Response) => {
 
   const post = await prisma.post.findUnique({
     where: {
-      id: postId,
+      id: postId
     },
     include: {
       author: true,
@@ -88,7 +89,23 @@ const getPostController = async (req: Request, res: Response) => {
 };
 
 const validateUpdatePost = [
+  body("title")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("Title cannot be empty"),
+  body("subtitle")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("Subtitle not descriptive"),
+  body("content")
+    .optional()
+    .trim()
+    .isLength({ min: 5 })
+    .withMessage("Content not descriptive"),
   body("published")
+    .optional()
     .isBoolean()
     .toBoolean()
     .withMessage("Published status must be 'true' or 'false'")
@@ -97,7 +114,12 @@ const validateUpdatePost = [
 const updateController = [
   ...validateUpdatePost,
   async (req: Request, res: Response) => {
-    const { published } = matchedData(req);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+
+    const { title, content, subtitle, published } = matchedData(req);
 
     const postId = req.params.postId as string;
 
@@ -106,7 +128,10 @@ const updateController = [
         id: postId
       },
       data: {
-        published
+        ...(title !== undefined && { title }),
+        ...(subtitle !== undefined && { subtitle }),
+        ...(content !== undefined && { content }),
+        ...(published !== undefined && { published })
       }
     });
 

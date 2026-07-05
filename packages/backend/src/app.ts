@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import cors from 'cors'
+import cors from "cors";
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
@@ -15,17 +15,21 @@ import { commentLikeController } from "./controllers/commentLikeController";
 import { postLikeController } from "./controllers/postLikeController";
 import { homepageController } from "./controllers/homepageController";
 import { getPostController } from "./controllers/postController";
+import { jwtSign } from "./utils/helper";
 
 const app = express();
 
 const INVALID_LOGIN_MSG = "Invalid username or password";
 
-app.use(cors({
-  origin: [
-    "http://localhost:5173",           // frontend local dev
-    "https://blog-reader.vercel.app",  // reader in production
-  ]
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // frontend local dev
+      "http://localhost:5174", // frontend local dev
+      "https://blog-reader.vercel.app" // reader in production
+    ]
+  })
+);
 
 app.use(express.json()); // ✅ also add this — needed to read req.body as JSON
 
@@ -43,24 +47,14 @@ app.post("/login", async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(401).json({ message: INVALID_LOGIN_MSG });
 
-  jwt.sign(
-    { user },
-    process.env.JWT_SECRET!,
-    (err: Error | null, token: string | undefined) => {
-      if (err)
-        return res
-          .status(500)
-          .json({ message: "Error occurred while generating token" });
-      res.json({ token });
-    }
-  );
+  jwtSign(user, res);
 });
 
 app.get("/login", loginController);
 
 app.post("/signup", signup.postController);
 
-app.get('/', homepageController)
+app.get("/", homepageController);
 
 app.get("/posts/:postId", getPostController);
 

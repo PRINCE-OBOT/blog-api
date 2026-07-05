@@ -1,7 +1,15 @@
+import jwt from "jsonwebtoken";
+
+import type { Response } from "express";
+
 import streamifier from "streamifier";
 import type { UploadApiResponse, UploadApiErrorResponse } from "cloudinary";
-
 import cloudinary from "../lib/cloudinary";
+
+interface User {
+  id: string;
+  username: string;
+}
 
 export function uploadToCloudinary(file: Express.Multer.File) {
   return new Promise<UploadApiResponse>((resolve, reject) => {
@@ -24,3 +32,16 @@ export function uploadToCloudinary(file: Express.Multer.File) {
   });
 }
 
+export function jwtSign(user: User, res: Response) {
+  jwt.sign(
+    { user },
+    process.env.JWT_SECRET!,
+    (err: Error | null, token: string | undefined) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ message: "Error occurred while generating token" });
+      res.json({ token, user });
+    }
+  );
+}

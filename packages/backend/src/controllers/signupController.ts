@@ -3,6 +3,7 @@ import { body, validationResult, matchedData } from "express-validator";
 import type { Request, Response } from "express";
 
 import { prisma } from "../lib/prisma";
+import { jwtSign } from "../utils/helper";
 
 const alphaErr = "must contain only letters";
 
@@ -31,24 +32,23 @@ const postController = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ message: errors.array() });
 
     const { firstName, lastName, username, password } = matchedData(req);
 
-    const user = await prisma.user.findUnique({ where: { username } });
+    const userExist = await prisma.user.findUnique({ where: { username } });
 
-    if (user)
-      return res.status(409).json({ error: "Account already exist" });
+    if (userExist)
+      return res.status(409).json({ message: "Account already exist" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: { firstName, lastName, username, password: hashedPassword }
     });
 
-    res.redirect("/log-in");
+    jwtSign(user, res);
   }
 ];
-
 
 export { postController };
