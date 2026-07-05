@@ -48,7 +48,7 @@ model Comment {
   username String
 
   postId String
-  post   Post   @relation(fields: [postId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   likes CommentLike[]
 
@@ -60,7 +60,7 @@ model PostLike {
   id String @id @default(cuid())
 
   postId String
-  post   Post   @relation(fields: [postId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model CommentLike {

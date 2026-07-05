@@ -139,4 +139,21 @@ const updateController = [
   }
 ];
 
-export { postController, getPostController, updateController };
+const deleteController = async (req: Request, res: Response) => {
+  const postId = req.params.postId as string;
+
+  const post = await prisma.post.delete({
+    where: {
+      id: postId
+    }
+  });
+
+  res.json(post);
+};
+
+export {
+  postController,
+  getPostController,
+  updateController,
+  deleteController
+};

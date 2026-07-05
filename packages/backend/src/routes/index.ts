@@ -11,4 +11,6 @@ router.post("/post", post.postController);
 
 router.put("/posts/:postId", post.updateController);
 
+router.delete("/posts/:postId", post.deleteController);
+
 export { router };
