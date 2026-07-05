@@ -64,7 +64,7 @@ export const getPost = (id: string): Promise<Post> =>
   request<Post>(`/posts/${id}`);
 
 export const createPost = (data: PostFormData): Promise<Post> =>
-  request<Post>("/posts", {
+  request<Post>("/post", {
     method: "POST",
     body: JSON.stringify(data)
   });

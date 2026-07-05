@@ -6,7 +6,7 @@ import { Field, ErrorAlert, SuccessAlert } from "../components/ui";
 import type { Post, PostFormData } from "../types";
 
 interface PostEditorProps {
-  post?: Post | null;       // null = new post, Post = editing existing
+  post?: Post | null; // null = new post, Post = editing existing
   onBack: () => void;
   onSaved: () => void;
 }
@@ -16,7 +16,7 @@ const EMPTY: PostFormData = {
   subtitle: "",
   hero_img_url: "",
   content: "",
-  published: false,
+  published: false
 };
 
 export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
@@ -26,35 +26,37 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
   const [fields, setFields] = useState<PostFormData>(
     post
       ? {
-          title:       post.title,
-          subtitle:    post.subtitle ?? "",
+          title: post.title,
+          subtitle: post.subtitle ?? "",
           hero_img_url: post.hero_img_url,
-          content:     post.content,
-          published:   post.published,
+          content: post.content,
+          published: post.published
         }
       : EMPTY
   );
 
-  const [submitting, setSubmitting]   = useState(false);
-  const [error, setError]             = useState<string | null>(null);
-  const [success, setSuccess]         = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
     setFields((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : value
     }));
   }
 
-  async function handleSave(publishOverride?: boolean) {
+  async function handlePublish() {
     const content = editorRef.current?.getContent() ?? fields.content;
 
-    if (!fields.title.trim()) {
+    const { title, hero_img_url } = fields;
+
+    if (!title.trim()) {
       setError("Title is required.");
       return;
     }
-    if (!fields.hero_img_url.trim()) {
+    if (!hero_img_url.trim()) {
       setError("Hero image URL is required.");
       return;
     }
@@ -65,8 +67,7 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
 
     const payload: PostFormData = {
       ...fields,
-      content,
-      published: publishOverride ?? fields.published,
+      content
     };
 
     setError(null);
@@ -96,7 +97,6 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
 
   return (
     <div className="p-8 max-w-4xl">
-
       {/* Header */}
       <div className="flex items-center gap-4 mb-8 pb-6 border-b border-border">
         <button
@@ -110,11 +110,18 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
         </h1>
       </div>
 
-      {error   && <div className="mb-6"><ErrorAlert message={error} /></div>}
-      {success && <div className="mb-6"><SuccessAlert message={success} /></div>}
+      {error && (
+        <div className="mb-6">
+          <ErrorAlert message={error} />
+        </div>
+      )}
+      {success && (
+        <div className="mb-6">
+          <SuccessAlert message={success} />
+        </div>
+      )}
 
       <div className="flex flex-col gap-5">
-
         {/* Title */}
         <Field
           id="title"
@@ -164,7 +171,9 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
             Content
           </p>
           <Editor
-            onInit={(_evt, editor) => { editorRef.current = editor; }}
+            onInit={(_evt, editor) => {
+              editorRef.current = editor;
+            }}
             initialValue={fields.content}
             apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
             init={{
@@ -173,10 +182,25 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
               skin: "oxide-dark",
               content_css: "dark",
               plugins: [
-                "advlist", "autolink", "lists", "link", "image",
-                "charmap", "preview", "anchor", "searchreplace",
-                "visualblocks", "code", "fullscreen", "insertdatetime",
-                "media", "table", "code", "help", "wordcount", "codesample",
+                "advlist",
+                "autolink",
+                "lists",
+                "link",
+                "image",
+                "charmap",
+                "preview",
+                "anchor",
+                "searchreplace",
+                "visualblocks",
+                "code",
+                "fullscreen",
+                "insertdatetime",
+                "media",
+                "table",
+                "code",
+                "help",
+                "wordcount",
+                "codesample"
               ],
               toolbar:
                 "undo redo | blocks | bold italic underline | " +
@@ -186,10 +210,10 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
               codesample_languages: [
                 { text: "JavaScript", value: "javascript" },
                 { text: "TypeScript", value: "typescript" },
-                { text: "HTML/XML",   value: "markup"     },
-                { text: "CSS",        value: "css"        },
-                { text: "Bash",       value: "bash"       },
-                { text: "JSON",       value: "json"       },
+                { text: "HTML/XML", value: "markup" },
+                { text: "CSS", value: "css" },
+                { text: "Bash", value: "bash" },
+                { text: "JSON", value: "json" }
               ],
               content_style: `
                 body {
@@ -206,7 +230,7 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
                 }
                 a { color: #2563EB; }
                 pre { background: #111; border-left: 3px solid #2563EB; padding: 1rem; }
-              `,
+              `
             }}
           />
         </div>
@@ -240,22 +264,13 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
           </button>
 
           <button
-            onClick={() => handleSave(false)}
-            disabled={submitting}
-            className="font-display font-bold text-[11px] tracking-[0.08em] uppercase px-5 py-2.5 border border-border text-slate hover:border-parchment hover:text-parchment transition-colors disabled:opacity-40"
-          >
-            {submitting ? "Saving…" : "Save Draft"}
-          </button>
-
-          <button
-            onClick={() => handleSave(true)}
+            onClick={() => handlePublish()}
             disabled={submitting}
             className="font-display font-bold text-[11px] tracking-[0.08em] uppercase px-5 py-2.5 bg-brand text-white hover:opacity-85 transition-opacity disabled:opacity-40"
           >
             {submitting ? "Publishing…" : "Publish Post"}
           </button>
         </div>
-
       </div>
     </div>
   );
