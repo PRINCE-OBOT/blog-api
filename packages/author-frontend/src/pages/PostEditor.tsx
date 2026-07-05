@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
 import { createPost, updatePost } from "../api";
-import { Field, ErrorAlert, SuccessAlert } from "../components/ui";
+import { Field, ErrorAlert, SuccessAlert, Spinner } from "../components/ui";
 import type { Post, PostFormData } from "../types";
 
 interface PostEditorProps {
@@ -38,6 +38,7 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [editorLoading, setEditorLoading] = useState(true);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
@@ -170,9 +171,11 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
           <p className="font-display text-[11px] font-semibold tracking-widest uppercase text-slate mb-1.5">
             Content
           </p>
+          {editorLoading && <Spinner />}
           <Editor
             onInit={(_evt, editor) => {
               editorRef.current = editor;
+              setEditorLoading(false);
             }}
             initialValue={fields.content}
             apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
