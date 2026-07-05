@@ -31,9 +31,9 @@ app.use(
   })
 );
 
-app.use(express.json()); // ✅ also add this — needed to read req.body as JSON
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json()); // ✅ also add this — needed to read req.body as JSON
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;

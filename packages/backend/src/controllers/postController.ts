@@ -6,7 +6,6 @@ import { prisma } from "../lib/prisma";
 import { uploadToCloudinary } from "../utils/helper";
 
 const storage = multer.memoryStorage();
-
 const HERO_IMG_LIMIT = 1024 * 1024 * 5;
 
 const upload = multer({ storage, limits: { fileSize: HERO_IMG_LIMIT } });
@@ -34,6 +33,7 @@ const validatePost = [
 const postController = [
   (req: Request, res: Response, next: NextFunction) => {
     upload.single("hero_img")(req, res, (err) => {
+      console.log(req.file)
       if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
         return res.status(400).json({ error: "Image must be less than 5MB" });
       }
@@ -43,6 +43,8 @@ const postController = [
   ...validatePost,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
+
+          console.log(req.file, 'ji');
 
     if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
