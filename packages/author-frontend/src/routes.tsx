@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import LoginPage from "./pages/LoginPage";
 import PostEditor from "./pages/PostEditor";
 import SignupPage from "./pages/SignupPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const routes = [
   {
@@ -48,6 +49,10 @@ const routes = [
         ]
       }
     ]
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />
   }
 ];
 
