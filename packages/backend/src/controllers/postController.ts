@@ -30,21 +30,20 @@ const validatePost = [
     .withMessage("Published status must be 'true' or 'false'")
 ];
 
+const heroImgController = (req: Request, res: Response, next: NextFunction) => {
+  upload.single("hero_img")(req, res, (err) => {
+    if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ error: "Image must be less than 5MB" });
+    }
+    next();
+  });
+};
+
 const postController = [
-  (req: Request, res: Response, next: NextFunction) => {
-    upload.single("hero_img")(req, res, (err) => {
-      console.log(req.file);
-      if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json({ error: "Image must be less than 5MB" });
-      }
-      next();
-    });
-  },
+  heroImgController,
   ...validatePost,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
-
-    console.log(req.file, "ji");
 
     if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
@@ -114,6 +113,7 @@ const validateUpdatePost = [
 ];
 
 const updateController = [
+  heroImgController,
   ...validateUpdatePost,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -125,7 +125,9 @@ const updateController = [
 
     const postId = req.params.postId as string;
 
-    let hero_img_url = req.body.hero_img
+    console.log(req.body);
+
+    let hero_img_url = req.body.hero_img;
 
     if (req.file) {
       const result = await uploadToCloudinary(req.file);

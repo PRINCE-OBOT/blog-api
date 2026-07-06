@@ -3,19 +3,8 @@ import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
 import { createPost, getPost, updatePost } from "../api";
 import { Field, ErrorAlert, SuccessAlert, Spinner } from "../components/ui";
-import type { Post, PostFormData } from "../types";
-import {
-  NavLink,
-  useLocation,
-  useOutletContext,
-  useParams
-} from "react-router";
-
-interface PostEditorProps {
-  post?: Post | null; // null = new post, Post = editing existing
-  onBack: () => void;
-  onSaved: () => void;
-}
+import type { PostFormData } from "../types";
+import { NavLink, useLocation, useParams } from "react-router";
 
 const EMPTY: PostFormData = {
   title: "",
@@ -25,7 +14,6 @@ const EMPTY: PostFormData = {
 };
 
 export default function PostEditor() {
-  const { onSaved }: PostEditorProps = useOutletContext();
   const location = useLocation();
   const { postId } = useParams();
 
@@ -129,14 +117,18 @@ export default function PostEditor() {
         await updatePost(postId || "", payload);
       } else {
         await createPost(payload);
+
+        setFields(EMPTY);
+        setHeroPreview("");
+        editorRef.current?.setContent("");
       }
       setSuccess(
         published ? "Post published successfully!" : "Draft saved successfully!"
       );
+
       setTimeout(() => {
         setSuccess(null);
-        onSaved();
-      }, 1500);
+      }, 5000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save post.");
     } finally {
