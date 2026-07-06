@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { usePosts } from "../hooks/usePosts";
 import { Spinner, StatusScreen } from "../components/ui";
-import type { Post, PostFormData } from "../types";
-import { NavLink, useOutletContext } from "react-router";
+import type { Post } from "../types";
+import { NavLink } from "react-router";
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-US", {

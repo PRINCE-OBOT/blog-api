@@ -11,6 +11,10 @@ function getToken(): string | null {
   return localStorage.getItem("token");
 }
 
+function getUserId(): string {
+  return JSON.parse(localStorage.getItem("user") || "")?.id;
+}
+
 async function request<T>(
   path: string,
   options: RequestInit = {},
@@ -64,7 +68,8 @@ export const signup = (data: SignupFormData): Promise<AuthResponse> =>
   );
 
 // ── Posts ─────────────────────────────────────────────
-export const getAllPosts = (): Promise<Post[]> => request<Post[]>("/posts");
+export const getAuthorPosts = (): Promise<Post[]> =>
+  request<Post[]>(`/posts?authorId=${getUserId()}`);
 
 export const getPost = (id: string): Promise<Post> =>
   request<Post>(`/posts/${id}`);

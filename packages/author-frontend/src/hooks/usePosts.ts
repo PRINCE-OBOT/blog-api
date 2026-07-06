@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAllPosts, deletePost, togglePublish } from "../api";
+import { deletePost, togglePublish, getAuthorPosts } from "../api";
 import type { Post } from "../types";
 
 interface UsePostsResult {
@@ -18,10 +18,16 @@ export function usePosts(): UsePostsResult {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    getAllPosts()
-      .then((data) => { if (!cancelled) setPosts(data); })
-      .catch((err: Error) => { if (!cancelled) setError(err.message); })
-      .finally(() => { if (!cancelled) setLoading(false); });
+    getAuthorPosts()
+      .then((data) => {
+        if (!cancelled) setPosts(data);
+      })
+      .catch((err: Error) => {
+        if (!cancelled) setError(err.message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
     return () => { cancelled = true; };
   }, []);
 
