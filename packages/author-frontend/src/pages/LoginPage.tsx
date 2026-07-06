@@ -3,13 +3,11 @@ import { useAuth } from "../context/AuthContext";
 import { login as loginApi } from "../api";
 import { Field, ErrorAlert } from "../components/ui";
 import { Logo } from "../components/Logo";
+import { Navigate, NavLink } from "react-router";
 
-interface LoginPageProps {
-  onGoSignup: () => void;
-}
-
-export default function LoginPage({ onGoSignup }: LoginPageProps) {
+export default function LoginPage() {
   const { login } = useAuth();
+  const [isLogin, setIsLogin] = useState(false);
   const [fields, setFields] = useState({ username: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -26,6 +24,7 @@ export default function LoginPage({ onGoSignup }: LoginPageProps) {
     try {
       const { token, user } = await loginApi(fields);
       login(token, user);
+      setIsLogin(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
     } finally {
@@ -33,7 +32,9 @@ export default function LoginPage({ onGoSignup }: LoginPageProps) {
     }
   }
 
-  return (
+  return isLogin ? (
+    <Navigate to="/" />
+  ) : (
     <div className="min-h-screen bg-ink flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
@@ -99,12 +100,13 @@ export default function LoginPage({ onGoSignup }: LoginPageProps) {
         {/* Switch to signup */}
         <p className="text-center font-display text-xs text-slate mt-5">
           Don't have an account?{" "}
-          <button
-            onClick={onGoSignup}
-            className="text-brand hover:opacity-80 transition-opacity font-semibold"
+          <NavLink
+            to="/signup"
+            className="text-brand hover:opacity-80 transition-opacity
+            font-semibold"
           >
             Sign up
-          </button>
+          </NavLink>
         </p>
       </div>
     </div>

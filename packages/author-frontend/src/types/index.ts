@@ -27,8 +27,9 @@ export interface Post {
 // For create / edit form
 export interface PostFormData {
   title: string;
-  subtitle: string;
-  hero_img_url: string;
+  subtitle?: string;
+  hero_img?: File | null;
+  hero_img_url?: string | null;
   content: string;
   published: boolean;
 }

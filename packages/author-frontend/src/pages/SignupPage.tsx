@@ -4,10 +4,7 @@ import { signup as signupApi } from "../api";
 import { Field, ErrorAlert } from "../components/ui";
 import type { SignupFormData } from "../types";
 import { Logo } from "../components/Logo";
-
-interface SignupPageProps {
-  onGoLogin: () => void;
-}
+import { Navigate, NavLink } from "react-router";
 
 const EMPTY: SignupFormData = {
   firstName: "",
@@ -17,8 +14,9 @@ const EMPTY: SignupFormData = {
   confirmPassword: ""
 };
 
-export default function SignupPage({ onGoLogin }: SignupPageProps) {
+export default function SignupPage() {
   const { login } = useAuth();
+  const [isLogin, setIsLogin] = useState(false);
   const [fields, setFields] = useState<SignupFormData>(EMPTY);
   const [errors, setErrors] = useState<Partial<SignupFormData>>({});
   const [serverError, setServerError] = useState<string | null>(null);
@@ -34,13 +32,12 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
   function validate(): boolean {
     const newErrors: Partial<SignupFormData> = {};
 
-  const { firstName, lastName, username, password } = fields
-  
+    const { firstName, lastName, username, password } = fields;
+
     if (!firstName.trim()) newErrors.firstName = "Required";
     if (!lastName.trim()) newErrors.lastName = "Required";
     if (!username.trim()) newErrors.username = "Required";
-    if (password.length < 6)
-      newErrors.password = "At least 6 characters";
+    if (password.length < 6) newErrors.password = "At least 6 characters";
     if (fields.password !== fields.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
     setErrors(newErrors);
@@ -55,6 +52,7 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
     try {
       const { token, user } = await signupApi(fields);
       login(token, user);
+      setIsLogin(true);
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Signup failed.");
     } finally {
@@ -62,7 +60,9 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
     }
   }
 
-  return (
+  return isLogin ? (
+    <Navigate to="/" />
+  ) : (
     <div className="min-h-screen bg-ink flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         {/* Logo */}
@@ -165,12 +165,13 @@ export default function SignupPage({ onGoLogin }: SignupPageProps) {
 
         <p className="text-center font-display text-xs text-slate mt-5">
           Already have an account?{" "}
-          <button
-            onClick={onGoLogin}
-            className="text-brand hover:opacity-80 transition-opacity font-semibold"
+          <NavLink
+            to="/login"
+            className="text-brand hover:opacity-80 transition-opacity
+            font-semibold"
           >
             Sign in
-          </button>
+          </NavLink>
         </p>
       </div>
     </div>

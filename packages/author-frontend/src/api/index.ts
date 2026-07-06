@@ -1,6 +1,5 @@
 import type {
   Post,
-  PostFormData,
   AuthResponse,
   LoginFormData,
   SignupFormData
@@ -17,16 +16,23 @@ async function request<T>(
   options: RequestInit = {},
   requiresAuth = true
 ): Promise<T> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json"
-  };
+  const headers = new Headers(options.headers);
+
+  if (!(options.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
+  }
 
   if (requiresAuth) {
     const token = getToken();
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers
+  });
 
   if (!res.ok) {
     const err = (await res.json().catch(() => ({}))) as { message?: string };
@@ -63,19 +69,16 @@ export const getAllPosts = (): Promise<Post[]> => request<Post[]>("/posts");
 export const getPost = (id: string): Promise<Post> =>
   request<Post>(`/posts/${id}`);
 
-export const createPost = (data: PostFormData): Promise<Post> =>
+export const createPost = (formData: FormData): Promise<Post> =>
   request<Post>("/post", {
     method: "POST",
-    body: JSON.stringify(data)
+    body: formData
   });
 
-export const updatePost = (
-  id: string,
-  data: Partial<PostFormData>
-): Promise<Post> =>
+export const updatePost = (id: string, formData: FormData): Promise<Post> =>
   request<Post>(`/posts/${id}`, {
     method: "PUT",
-    body: JSON.stringify(data)
+    body: formData
   });
 
 export const deletePost = (id: string): Promise<void> =>

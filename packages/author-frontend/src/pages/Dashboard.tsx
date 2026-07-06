@@ -2,6 +2,7 @@ import { useState } from "react";
 import { usePosts } from "../hooks/usePosts";
 import { Spinner, StatusScreen } from "../components/ui";
 import type { Post } from "../types";
+import { NavLink, useOutletContext } from "react-router";
 
 interface DashboardProps {
   onNewPost: () => void;
@@ -10,64 +11,85 @@ interface DashboardProps {
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric", month: "short", day: "numeric",
+    year: "numeric",
+    month: "short",
+    day: "numeric"
   });
 }
 
-export default function Dashboard({ onNewPost, onEditPost }: DashboardProps) {
-  const { posts, loading, error, handleDelete, handleTogglePublish } = usePosts();
+export default function Dashboard() {
+  const { onNewPost, onEditPost }: DashboardProps = useOutletContext();
+
+  const { posts, loading, error, handleDelete, handleTogglePublish } =
+    usePosts();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
   async function confirmDelete(id: string) {
     if (!window.confirm("Delete this post? This cannot be undone.")) return;
     setDeletingId(id);
-    try { await handleDelete(id); }
-    finally { setDeletingId(null); }
+    try {
+      await handleDelete(id);
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   async function handlePublishToggle(post: Post) {
     setTogglingId(post.id);
-    try { await handleTogglePublish(post.id, !post.published); }
-    finally { setTogglingId(null); }
+    try {
+      await handleTogglePublish(post.id, !post.published);
+    } finally {
+      setTogglingId(null);
+    }
   }
 
   const published = posts.filter((p) => p.published).length;
-  const drafts    = posts.filter((p) => !p.published).length;
+  const drafts = posts.filter((p) => !p.published).length;
 
-  if (loading) return <StatusScreen><Spinner /></StatusScreen>;
+  if (loading)
+    return (
+      <StatusScreen>
+        <Spinner />
+      </StatusScreen>
+    );
 
   if (error) {
     return (
       <StatusScreen>
-        <p className="text-danger font-display text-sm">Failed to load posts: {error}</p>
+        <p className="text-danger font-display text-sm">
+          Failed to load posts: {error}
+        </p>
       </StatusScreen>
     );
   }
 
   return (
     <div className="p-8 max-w-5xl">
-
       {/* Header */}
       <div className="flex items-start justify-between mb-8 pb-6 border-b border-border">
         <div>
-          <h1 className="font-display font-bold text-2xl tracking-tight text-parchment">Posts</h1>
-          <p className="text-slate text-sm mt-0.5 font-display">Manage your blog content</p>
+          <h1 className="font-display font-bold text-2xl tracking-tight text-parchment">
+            Posts
+          </h1>
+          <p className="text-slate text-sm mt-0.5 font-display">
+            Manage your blog content
+          </p>
         </div>
-        <button
-          onClick={onNewPost}
+        <NavLink
+          to="/new"
           className="bg-brand text-white font-display font-bold text-[11px] tracking-[0.08em] uppercase px-5 py-2.5 hover:opacity-85 transition-opacity"
         >
           + New Post
-        </button>
+        </NavLink>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 border border-border mb-8">
         {[
-          { label: "Total",     value: posts.length,  color: "text-parchment" },
-          { label: "Published", value: published,      color: "text-success"   },
-          { label: "Drafts",    value: drafts,         color: "text-slate"     },
+          { label: "Total", value: posts.length, color: "text-parchment" },
+          { label: "Published", value: published, color: "text-success" },
+          { label: "Drafts", value: drafts, color: "text-slate" }
         ].map(({ label, value, color }, i) => (
           <div
             key={label}
@@ -76,7 +98,9 @@ export default function Dashboard({ onNewPost, onEditPost }: DashboardProps) {
             <p className="font-display text-[10px] font-semibold tracking-[0.12em] uppercase text-slate mb-1">
               {label}
             </p>
-            <p className={`font-display font-bold text-3xl tracking-tight ${color}`}>
+            <p
+              className={`font-display font-bold text-3xl tracking-tight ${color}`}
+            >
               {value}
             </p>
           </div>
@@ -121,7 +145,9 @@ export default function Dashboard({ onNewPost, onEditPost }: DashboardProps) {
                       {post.title}
                     </p>
                     {post.subtitle && (
-                      <p className="text-slate text-xs truncate mt-0.5">{post.subtitle}</p>
+                      <p className="text-slate text-xs truncate mt-0.5">
+                        {post.subtitle}
+                      </p>
                     )}
                   </td>
 
@@ -131,13 +157,16 @@ export default function Dashboard({ onNewPost, onEditPost }: DashboardProps) {
                       className={`
                         inline-flex items-center gap-1.5 font-display text-[10px] font-semibold
                         tracking-[0.06em] uppercase px-2 py-1 border
-                        ${post.published
-                          ? "text-success border-success/25 bg-success/8"
-                          : "text-slate border-border bg-transparent"
+                        ${
+                          post.published
+                            ? "text-success border-success/25 bg-success/8"
+                            : "text-slate border-border bg-transparent"
                         }
                       `}
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full ${post.published ? "bg-success" : "bg-slate"}`} />
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${post.published ? "bg-success" : "bg-slate"}`}
+                      />
                       {post.published ? "Published" : "Draft"}
                     </span>
                   </td>
@@ -160,25 +189,27 @@ export default function Dashboard({ onNewPost, onEditPost }: DashboardProps) {
                           font-display text-[10px] font-semibold tracking-wide uppercase
                           px-2.5 py-1 border transition-colors duration-150
                           disabled:opacity-40 disabled:cursor-not-allowed
-                          ${post.published
-                            ? "border-border text-slate hover:border-parchment hover:text-parchment"
-                            : "border-success/40 text-success hover:bg-success/8"
+                          ${
+                            post.published
+                              ? "border-border text-slate hover:border-parchment hover:text-parchment"
+                              : "border-success/40 text-success hover:bg-success/8"
                           }
                         `}
                       >
                         {togglingId === post.id
                           ? "…"
-                          : post.published ? "Unpublish" : "Publish"
-                        }
+                          : post.published
+                            ? "Unpublish"
+                            : "Publish"}
                       </button>
 
                       {/* Edit */}
-                      <button
-                        onClick={() => onEditPost(post)}
+                      <NavLink
+                        to="/edit"
                         className="font-display text-[10px] font-semibold tracking-wide uppercase px-2.5 py-1 border border-border text-slate hover:border-parchment hover:text-parchment transition-colors duration-150"
                       >
                         Edit
-                      </button>
+                      </NavLink>
 
                       {/* Delete */}
                       <button

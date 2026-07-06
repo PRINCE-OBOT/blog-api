@@ -4,6 +4,7 @@ import type { Editor as TinyMCEEditor } from "tinymce";
 import { createPost, updatePost } from "../api";
 import { Field, ErrorAlert, SuccessAlert, Spinner } from "../components/ui";
 import type { Post, PostFormData } from "../types";
+import { NavLink, useLocation, useOutletContext } from "react-router";
 
 interface PostEditorProps {
   post?: Post | null; // null = new post, Post = editing existing
@@ -14,21 +15,26 @@ interface PostEditorProps {
 const EMPTY: PostFormData = {
   title: "",
   subtitle: "",
-  hero_img_url: "",
   content: "",
   published: false
 };
 
-export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
-  const isEditing = !!post;
+export default function PostEditor() {
+  const { post, onSaved }: PostEditorProps = useOutletContext();
+  const location = useLocation();
+
+  const isEditing = location.pathname === "/edit";
   const editorRef = useRef<TinyMCEEditor | null>(null);
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [heroPreview, setHeroPreview] = useState<string>(
+    post?.hero_img_url ?? ""
+  );
 
   const [fields, setFields] = useState<PostFormData>(
     post
       ? {
           title: post.title,
           subtitle: post.subtitle ?? "",
-          hero_img_url: post.hero_img_url,
           content: post.content,
           published: post.published
         }
@@ -48,42 +54,70 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
     }));
   }
 
+  function handleHeroFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate — image only, max 5MB
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be under 5MB.");
+      return;
+    }
+
+    setError(null);
+    setHeroFile(file);
+
+    // Show local preview immediately while upload happens in background
+    const objectUrl = URL.createObjectURL(file);
+    setHeroPreview(objectUrl);
+  }
+
   async function handlePublish() {
     const content = editorRef.current?.getContent() ?? fields.content;
 
-    const { title, hero_img_url } = fields;
+    const { title, published } = fields;
 
     if (!title.trim()) {
       setError("Title is required.");
       return;
     }
-    if (!hero_img_url.trim()) {
-      setError("Hero image URL is required.");
-      return;
-    }
+
     if (!content.trim()) {
       setError("Post content cannot be empty.");
       return;
     }
 
-    const payload: PostFormData = {
-      ...fields,
-      content
+    const formData = (allFields: PostFormData) => {
+      const data = new FormData();
+
+      Object.entries(allFields).forEach(([key, value]) => {
+        data.append(key, value as string);
+      });
+
+      return data;
     };
+
+    const payload: FormData = formData({
+      ...fields,
+      hero_img: heroFile,
+      content
+    });
 
     setError(null);
     setSubmitting(true);
 
     try {
       if (isEditing) {
-        await updatePost(post.id, payload);
+        await updatePost(post?.id || "", payload);
       } else {
         await createPost(payload);
       }
       setSuccess(
-        payload.published
-          ? "Post published successfully!"
-          : "Draft saved successfully!"
+        published ? "Post published successfully!" : "Draft saved successfully!"
       );
       setTimeout(() => {
         setSuccess(null);
@@ -100,12 +134,12 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
     <div className="p-8 max-w-4xl">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8 pb-6 border-b border-border">
-        <button
-          onClick={onBack}
+        <NavLink
+          to="/"
           className="font-display text-[11px] font-medium tracking-[0.05em] uppercase text-slate hover:text-parchment transition-colors border border-border px-3 py-1.5"
         >
           ← Back
-        </button>
+        </NavLink>
         <h1 className="font-display font-bold text-xl tracking-tight text-parchment">
           {isEditing ? "Edit Post" : "New Post"}
         </h1>
@@ -137,32 +171,95 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
         <Field
           id="subtitle"
           label="Subtitle (optional)"
-          value={fields.subtitle}
+          value={fields.subtitle || ""}
           onChange={handleChange}
           placeholder="A short supporting headline"
         />
 
         {/* Hero image URL */}
-        <Field
-          id="hero_img_url"
-          label="Hero Image URL"
-          value={fields.hero_img_url}
-          onChange={handleChange}
-          placeholder="https://example.com/image.jpg"
-          required
-        />
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="hero_img"
+            className="font-display text-[11px] font-semibold tracking-widest uppercase text-slate"
+          >
+            Hero Image
+          </label>
+
+          {/* Dropzone-style label */}
+          <label
+            htmlFor="hero_img"
+            className="
+              flex flex-col items-center justify-center gap-2
+              border border-dashed border-border hover:border-brand
+              cursor-pointer transition-colors duration-150 p-6
+              bg-card text-slate text-xs font-display
+            "
+          >
+            <svg
+              className="w-6 h-6 text-slate"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+              />
+            </svg>
+            {heroFile ? (
+              <span className="text-parchment font-medium">
+                {heroFile.name}
+              </span>
+            ) : (
+              <span>
+                Click to upload <span className="text-brand">hero image</span>
+              </span>
+            )}
+            <span className="text-slate/60">PNG, JPG, WEBP — max 5MB</span>
+          </label>
+
+          {/* Hidden actual input */}
+          <input
+            id="hero_img"
+            name="hero_img"
+            type="file"
+            accept="image/*"
+            onChange={handleHeroFileChange}
+            className="sr-only"
+          />
+        </div>
 
         {/* Hero image preview */}
-        {fields.hero_img_url && (
-          <div className="border border-border overflow-hidden">
+        {heroPreview && (
+          <div className="border border-border overflow-hidden relative">
             <img
-              src={fields.hero_img_url}
+              src={heroPreview}
               alt="Hero preview"
               className="w-full h-48 object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
+            {/* Remove button */}
+            <button
+              type="button"
+              onClick={() => {
+                setHeroFile(null);
+                setHeroPreview("");
+                setFields((prev) => ({ ...prev, hero_img_url: "" }));
+              }}
+              className="
+                absolute top-2 right-2 bg-ink/80 border border-border
+                text-slate hover:text-danger hover:border-danger
+                font-display text-[10px] font-bold tracking-wide uppercase
+                px-2 py-1 transition-colors duration-150
+              "
+            >
+              Remove
+            </button>
           </div>
         )}
 
@@ -258,13 +355,12 @@ export default function PostEditor({ post, onBack, onSaved }: PostEditorProps) {
 
         {/* Action buttons */}
         <div className="flex items-center gap-3 pt-2 border-t border-border mt-2">
-          <button
-            onClick={onBack}
-            disabled={submitting}
+          <NavLink
+            to="/"
             className="font-display font-bold text-[11px] tracking-[0.08em] uppercase px-5 py-2.5 border border-border text-slate hover:border-parchment hover:text-parchment transition-colors disabled:opacity-40"
           >
             Discard
-          </button>
+          </NavLink>
 
           <button
             onClick={() => handlePublish()}
