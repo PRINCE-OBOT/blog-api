@@ -3,6 +3,22 @@ import { useAuth } from "../context/AuthContext";
 import { Logo } from "./Logo";
 import { NavLink } from "react-router";
 
+function Link({ path, text }: { path: string; text: string }) {
+  return (
+    <NavLink
+      to={path}
+      className={({ isActive }) =>
+        `w-full flex items-center gap-2.5 px-3 py-2 text-left
+        font-display text-sm font-medium transition-colors duration-150` +
+        (isActive
+          ? "text-parchment bg-card border-l-2 border-brand"
+          : "text-slate hover:text-parchment hover:bg-card")
+      }
+    >
+      {text}
+    </NavLink>
+  );
+}
 export default function Sidebar() {
   const { user, logout } = useAuth();
 
@@ -25,8 +41,8 @@ export default function Sidebar() {
           Content
         </p>
         <ul className="flex flex-col px-2 gap-0.5 mb-6">
-          <NavLink to="/">All Posts</NavLink>
-          <NavLink to="/new">New Post</NavLink>
+          <Link path="/" text="All Posts" />
+          <Link path="new/" text="New Post" />
         </ul>
       </nav>
 
