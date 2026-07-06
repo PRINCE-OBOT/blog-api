@@ -58,7 +58,7 @@ export default function PostEditor() {
       setFields(EMPTY);
       setHeroPreview("");
     }
-  }, []);
+  }, [isEditing, postId]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
@@ -331,6 +331,8 @@ export default function PostEditor() {
               ],
               content_style: `
                 body {
+                  scrollbar-width: none;
+                  -ms-overflow-style: none;
                   font-family: Inter, sans-serif;
                   font-size: 15px;
                   line-height: 1.7;
@@ -338,6 +340,11 @@ export default function PostEditor() {
                   background: #0A0A0A;
                   padding: 1rem 1.5rem;
                 }
+                
+                *::-webkit-scrollbar {
+                  display: none;
+                }
+
                 h1, h2, h3 {
                   font-family: 'Space Grotesk', sans-serif;
                   color: #F0EEE8;
@@ -388,4 +395,3 @@ export default function PostEditor() {
     </div>
   );
 }
-// make UI responsive

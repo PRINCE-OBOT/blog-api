@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 function topBarTitle(pathname: string): string {
   return pathname === "/"
     ? "Dashboard"
-    : pathname === "/posts/new"
+    : pathname === "/new/"
       ? "New Post"
       : pathname.includes("/edit")
         ? "Edit Post"
@@ -28,7 +28,7 @@ export default function App() {
     }
 
     mediaQuery.addEventListener("change", handleChange);
-    
+
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
@@ -68,7 +68,7 @@ export default function App() {
             aria-label="Open menu"
             aria-expanded={sidebarOpen}
           >
-            <Menu/>
+            <Menu />
           </button>
 
           <p className="font-display text-sm font-semibold text-parchment">
@@ -77,7 +77,7 @@ export default function App() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto max-h-screen scrollbar-hide">
           <Outlet context={{}} />
         </main>
       </div>
