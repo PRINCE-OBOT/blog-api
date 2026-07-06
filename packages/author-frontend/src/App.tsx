@@ -7,15 +7,8 @@ type DashView = "posts" | "new-post" | "edit-post";
 
 export default function App() {
   const [dashView, setDashView] = useState<DashView>("posts");
-  const [editingPost, setEditingPost] = useState<Post | null>(null);
-
-  function handleEditPost(post: Post) {
-    setEditingPost(post);
-    setDashView("edit-post");
-  }
 
   function handleSaved() {
-    setEditingPost(null);
     setDashView("posts");
   }
 
@@ -36,8 +29,6 @@ export default function App() {
         <main className="flex-1 overflow-y-auto">
           <Outlet
             context={{
-              post: editingPost,
-              onEditPost: handleEditPost,
               onSaved: handleSaved
             }}
           />

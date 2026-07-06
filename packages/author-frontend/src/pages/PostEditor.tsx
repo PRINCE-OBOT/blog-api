@@ -1,10 +1,15 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
-import { createPost, updatePost } from "../api";
+import { createPost, getPost, updatePost } from "../api";
 import { Field, ErrorAlert, SuccessAlert, Spinner } from "../components/ui";
 import type { Post, PostFormData } from "../types";
-import { NavLink, useLocation, useOutletContext } from "react-router";
+import {
+  NavLink,
+  useLocation,
+  useOutletContext,
+  useParams
+} from "react-router";
 
 interface PostEditorProps {
   post?: Post | null; // null = new post, Post = editing existing
@@ -20,31 +25,40 @@ const EMPTY: PostFormData = {
 };
 
 export default function PostEditor() {
-  const { post, onSaved }: PostEditorProps = useOutletContext();
+  const { onSaved }: PostEditorProps = useOutletContext();
   const location = useLocation();
+  const { postId } = useParams();
 
-  const isEditing = location.pathname === "/edit";
+  const isEditing =
+    location.pathname.includes("/posts/") &&
+    location.pathname.includes("/edit");
+
   const editorRef = useRef<TinyMCEEditor | null>(null);
   const [heroFile, setHeroFile] = useState<File | null>(null);
-  const [heroPreview, setHeroPreview] = useState<string>(
-    post?.hero_img_url ?? ""
-  );
+  const [heroPreview, setHeroPreview] = useState<string>("");
 
-  const [fields, setFields] = useState<PostFormData>(
-    post
-      ? {
-          title: post.title,
-          subtitle: post.subtitle ?? "",
-          content: post.content,
-          published: post.published
-        }
-      : EMPTY
-  );
+  const [fields, setFields] = useState<PostFormData>(EMPTY);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [editorLoading, setEditorLoading] = useState(true);
+
+  useEffect(() => {
+    if (isEditing) {
+      getPost(postId || "")
+        .then((post) => {
+          setFields(post as PostFormData);
+          setHeroPreview(post.hero_img_url || "");
+        })
+        .catch((err) => {
+          setError(err instanceof Error ? err.message : "Failed to load post.");
+        });
+    } else {
+      setFields(EMPTY);
+      setHeroPreview("");
+    }
+  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
@@ -112,7 +126,7 @@ export default function PostEditor() {
 
     try {
       if (isEditing) {
-        await updatePost(post?.id || "", payload);
+        await updatePost(postId || "", payload);
       } else {
         await createPost(payload);
       }
@@ -374,3 +388,4 @@ export default function PostEditor() {
     </div>
   );
 }
+// make UI responsive

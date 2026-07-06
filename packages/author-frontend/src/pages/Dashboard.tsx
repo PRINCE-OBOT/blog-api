@@ -18,7 +18,7 @@ function formatDate(dateStr: string): string {
 }
 
 export default function Dashboard() {
-  const { onNewPost, onEditPost }: DashboardProps = useOutletContext();
+  const { onNewPost }: DashboardProps = useOutletContext();
 
   const { posts, loading, error, handleDelete, handleTogglePublish } =
     usePosts();
@@ -205,7 +205,7 @@ export default function Dashboard() {
 
                       {/* Edit */}
                       <NavLink
-                        to="/edit"
+                        to={`/posts/${post.id}/edit`}
                         className="font-display text-[10px] font-semibold tracking-wide uppercase px-2.5 py-1 border border-border text-slate hover:border-parchment hover:text-parchment transition-colors duration-150"
                       >
                         Edit

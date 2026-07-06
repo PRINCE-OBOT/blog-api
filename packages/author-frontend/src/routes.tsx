@@ -42,7 +42,7 @@ const routes = [
             element: <PostEditor />
           },
           {
-            path: "/edit",
+            path: "/posts/:postId/edit",
             element: <PostEditor />
           }
         ]
