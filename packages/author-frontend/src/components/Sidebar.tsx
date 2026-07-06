@@ -1,15 +1,26 @@
-import { LogOut } from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Logo } from "./Logo";
 import { NavLink } from "react-router";
 
-function Link({ path, text }: { path: string; text: string }) {
+interface SidebarProps {
+  onClose: () => void;
+}
+
+function Link({
+  path, text, onClose,
+}: {
+  path: string;
+  text: string;
+  onClose: () => void;
+}) {
   return (
     <NavLink
       to={path}
+      onClick={onClose} // close drawer on mobile when a link is tapped
       className={({ isActive }) =>
         `w-full flex items-center gap-2.5 px-3 py-2 text-left
-        font-display text-sm font-medium transition-colors duration-150` +
+        font-display text-sm font-medium transition-colors duration-150 ` +
         (isActive
           ? "text-parchment bg-card border-l-2 border-brand"
           : "text-slate hover:text-parchment hover:bg-card")
@@ -19,7 +30,8 @@ function Link({ path, text }: { path: string; text: string }) {
     </NavLink>
   );
 }
-export default function Sidebar() {
+
+export default function Sidebar({ onClose }: SidebarProps) {
   const { user, logout } = useAuth();
 
   const initials = user
@@ -29,10 +41,20 @@ export default function Sidebar() {
   const fullName = user ? `${user.firstName} ${user.lastName}` : "Author";
 
   return (
-    <aside className="w-[220px] flex-shrink-0 border-r border-border flex flex-col sticky top-0 h-screen">
-      {/* Logo */}
-      <div className="px-5 h-[60px] flex items-center border-b border-border flex-shrink-0">
+    <aside className="w-[220px] bg-ink flex-shrink-0 border-r border-border flex flex-col h-screen">
+
+      {/* Logo row */}
+      <div className="px-5 h-[60px] flex items-center justify-between border-b border-border flex-shrink-0">
         <Logo />
+
+        {/* Close button — mobile only */}
+        <button
+          onClick={onClose}
+          aria-label="Close menu"
+          className="lg:hidden text-slate hover:text-parchment transition-colors p-1 -mr-1"
+        >
+          <X size={18} />
+        </button>
       </div>
 
       {/* Nav */}
@@ -41,8 +63,8 @@ export default function Sidebar() {
           Content
         </p>
         <ul className="flex flex-col px-2 gap-0.5 mb-6">
-          <Link path="/" text="All Posts" />
-          <Link path="new/" text="New Post" />
+          <Link path="/"    text="All Posts" onClose={onClose} />
+          <Link path="new/" text="New Post"  onClose={onClose} />
         </ul>
       </nav>
 
@@ -63,11 +85,12 @@ export default function Sidebar() {
           onClick={logout}
           title="Sign out"
           aria-label="Sign out"
-          className="text-slate hover:text-danger transition-colors duration-150 text-sm flex-shrink-0"
+          className="text-slate hover:text-danger transition-colors duration-150 flex-shrink-0"
         >
-          <LogOut />
+          <LogOut size={16} />
         </button>
       </div>
+
     </aside>
   );
 }

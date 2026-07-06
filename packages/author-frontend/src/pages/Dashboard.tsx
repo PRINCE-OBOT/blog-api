@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { usePosts } from "../hooks/usePosts";
 import { Spinner, StatusScreen } from "../components/ui";
-import type { Post } from "../types";
+import type { Post, PostFormData } from "../types";
 import { NavLink, useOutletContext } from "react-router";
-
-interface DashboardProps {
-  onNewPost: () => void;
-  onEditPost: (post: Post) => void;
-}
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -17,9 +12,17 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export default function Dashboard() {
-  const { onNewPost }: DashboardProps = useOutletContext();
+function DateTd({ date }: { date: string }) {
+  return (
+    <td className="px-4 py-4 whitespace-nowrap">
+      <span className="font-display text-xs text-slate">
+        {formatDate(date)}
+      </span>
+    </td>
+  );
+}
 
+export default function Dashboard() {
   const { posts, loading, error, handleDelete, handleTogglePublish } =
     usePosts();
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -67,7 +70,7 @@ export default function Dashboard() {
   return (
     <div className="p-8 max-w-5xl">
       {/* Header */}
-      <div className="flex items-start justify-between mb-8 pb-6 border-b border-border">
+      <div className="flex items-start flex-wrap gap-4 justify-between mb-8 pb-6 border-b border-border">
         <div>
           <h1 className="font-display font-bold text-2xl tracking-tight text-parchment">
             Posts
@@ -111,15 +114,15 @@ export default function Dashboard() {
       {posts.length === 0 ? (
         <div className="border border-border p-12 text-center">
           <p className="text-slate font-display text-sm mb-4">No posts yet.</p>
-          <button
-            onClick={onNewPost}
+          <NavLink
+            to="/new"
             className="text-brand font-display text-xs font-semibold tracking-wide uppercase hover:opacity-80 transition-opacity"
           >
             Write your first post →
-          </button>
+          </NavLink>
         </div>
       ) : (
-        <div className="border border-border overflow-hidden">
+        <div className="border border-border overflow-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
@@ -172,11 +175,8 @@ export default function Dashboard() {
                   </td>
 
                   {/* Date */}
-                  <td className="px-4 py-4">
-                    <span className="font-display text-xs text-slate">
-                      {formatDate(post.updatedAt)}
-                    </span>
-                  </td>
+                  <DateTd date={post.createdAt} />
+                  <DateTd date={post.updatedAt} />
 
                   {/* Actions */}
                   <td className="px-4 py-4">
