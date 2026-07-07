@@ -81,7 +81,11 @@ const getPostController = async (req: Request, res: Response) => {
     },
     include: {
       author: true,
-      comments: true,
+      comments: {
+        orderBy: {
+          createdAt: "desc"
+        }
+      },
       likes: true
     }
   });

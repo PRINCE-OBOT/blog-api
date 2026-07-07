@@ -36,7 +36,7 @@ export default function PostDetail() {
     setTimeout(() => {
       if (content) Prism.highlightAll();
     }, 10);
-  }, [content]);
+  });
 
   if (loading) {
     return (
