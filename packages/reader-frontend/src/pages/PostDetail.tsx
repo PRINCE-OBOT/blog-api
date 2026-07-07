@@ -1,6 +1,6 @@
 import { NavLink, useParams } from "react-router";
 import { format } from "date-fns";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import Prism from "prismjs";
 
 import LikeButton from "../components/LikeButton";
@@ -32,11 +32,10 @@ export default function PostDetail() {
 
   const content = post?.content || "";
 
-  useEffect(() => {
-    if (content) {
-      // Activate the style for code block in all code blocks
-      Prism.highlightAll();
-    }
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      if (content) Prism.highlightAll();
+    }, 10);
   }, [content]);
 
   if (loading) {
@@ -69,7 +68,7 @@ export default function PostDetail() {
     <div className="max-w-[760px] mx-auto px-8 pt-10 pb-16">
       {/* Back */}
       <NavLink
-        to='/'
+        to="/"
         aria-label="Back to all posts"
         className="
           inline-flex items-center gap-1.5 text-slate font-display
@@ -106,13 +105,16 @@ export default function PostDetail() {
 
       {/* Content */}
       <div
-        className="prose prose-invert
-        prose-headings:text-parchment
-        prose-p:text-parchment
-        prose-a:text-brand
-        prose-strong:text-parchment
-        [&_pre::-webkit-scrollbar]:hidden
-        max-w-none"
+        className="
+          prose prose-invert
+          prose-headings:text-sm
+          prose-headings:text-slate 
+          prose-p:text-slate 
+          prose-p:text-parchment
+          prose-a:text-brand
+          prose-strong:text-parchment
+          [&_pre::-webkit-scrollbar]:hidden
+          max-w-none"
         dangerouslySetInnerHTML={{ __html: content }}
       />
 

@@ -125,8 +125,6 @@ const updateController = [
 
     const postId = req.params.postId as string;
 
-    console.log(req.body);
-
     let hero_img_url = req.body.hero_img;
 
     if (req.file) {
