@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { getPost, getComments, likePost, createComment } from "../api/posts";
-import type { Post, Comment, CommentFormData, Like } from "../types";
+import { getPost, likePost, createComment } from "../api/posts";
+import type { Post, Comment, CommentFormData } from "../types";
 
 interface UsePostResult {
   post: Post | null;

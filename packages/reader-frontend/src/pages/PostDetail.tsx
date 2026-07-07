@@ -1,6 +1,6 @@
 import { NavLink, useParams } from "react-router";
 import { format } from "date-fns";
-import { useEffect, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 import Prism from "prismjs";
 
 import LikeButton from "../components/LikeButton";
