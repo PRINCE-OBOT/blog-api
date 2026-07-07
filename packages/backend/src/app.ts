@@ -26,7 +26,8 @@ app.use(
     origin: [
       "http://localhost:5173", // frontend local dev
       "http://localhost:5174", // frontend local dev
-      "https://blog-reader.vercel.app" // reader in production
+      process.env.READER_FRONTEND_URL!, // frontend production
+      process.env.AUTHOR_FRONTEND_URL!, // frontend production
     ]
   })
 );
@@ -90,6 +91,4 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-app.listen(process.env.PORT, () => {
-  console.log(`Listening at http://localhost:${process.env.PORT}`);
-});
+export default app
