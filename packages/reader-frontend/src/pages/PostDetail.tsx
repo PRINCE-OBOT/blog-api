@@ -107,8 +107,6 @@ export default function PostDetail() {
       <div
         className="
           prose prose-invert
-          prose-headings:text-sm
-          prose-headings:text-slate 
           prose-p:text-slate 
           prose-p:text-parchment
           prose-a:text-brand
