@@ -8,11 +8,12 @@ The project consists of a RESTful API, an author dashboard for managing blog pos
 
 **Reader Frontend**
 
-Coming Soon
+
+[Live Preview](https://blog-api-reader.vercel.app/)
 
 **Author Frontend**
 
-Coming Soon
+[Live Preview](https://blog-api-author.vercel.app/)
 
 **Source Code**
 

@@ -28,7 +28,8 @@ app.use(
       "http://localhost:5174", // frontend local dev
       process.env.READER_FRONTEND_URL!, // frontend production
       process.env.AUTHOR_FRONTEND_URL!, // frontend production
-    ]
+    ],
+    credentials: true
   })
 );
 
