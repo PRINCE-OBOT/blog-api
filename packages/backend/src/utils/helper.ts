@@ -4,7 +4,7 @@ import type { Response } from "express";
 
 import streamifier from "streamifier";
 import type { UploadApiResponse, UploadApiErrorResponse } from "cloudinary";
-import cloudinary from "../lib/cloudinary";
+import cloudinary from "../lib/cloudinary.js";
 
 interface User {
   id: string;

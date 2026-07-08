@@ -1,7 +1,7 @@
 import { body, validationResult, matchedData } from "express-validator";
 import type { Request, Response } from "express";
 
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 const NOT_EMPTY_MSG = "must not be empty";
 

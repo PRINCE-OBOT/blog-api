@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 const postLikeController = async (req: Request, res: Response) => {
   const postId = req.params.postId as string;

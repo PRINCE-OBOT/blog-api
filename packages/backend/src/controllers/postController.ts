@@ -2,8 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import { body, validationResult, matchedData } from "express-validator";
 import multer from "multer";
 
-import { prisma } from "../lib/prisma";
-import { uploadToCloudinary } from "../utils/helper";
+import { prisma } from "../lib/prisma.js";
+import { uploadToCloudinary } from "../utils/helper.js";
 
 const storage = multer.memoryStorage();
 const HERO_IMG_LIMIT = 1024 * 1024 * 5;

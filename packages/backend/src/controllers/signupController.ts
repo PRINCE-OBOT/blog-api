@@ -2,8 +2,8 @@ import bcrypt from "bcryptjs";
 import { body, validationResult, matchedData } from "express-validator";
 import type { Request, Response } from "express";
 
-import { prisma } from "../lib/prisma";
-import { jwtSign } from "../utils/helper";
+import { prisma } from "../lib/prisma.js";
+import { jwtSign } from "../utils/helper.js";
 
 const alphaErr = "must contain only letters";
 

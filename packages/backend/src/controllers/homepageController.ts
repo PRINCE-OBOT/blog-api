@@ -1,5 +1,6 @@
-import { prisma } from "../lib/prisma";
 import type { Request, Response } from "express";
+
+import { prisma } from "../lib/prisma.js";
 
 export const homepageController = async (req: Request, res: Response) => {
   const authorId =

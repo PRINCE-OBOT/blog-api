@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "../src/lib/prisma";
+import { prisma } from "../src/lib/prisma.js";
 
 async function main() {
   const password = await bcrypt.hash(process.env.SEED_PASSWORD!, 10);

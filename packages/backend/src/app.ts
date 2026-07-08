@@ -6,16 +6,16 @@ import type { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { router } from "./routes/index";
-import { prisma } from "./lib/prisma";
-import { loginController } from "./controllers/loginController";
-import * as signup from "./controllers/signupController";
-import { commentController } from "./controllers/commentController";
-import { commentLikeController } from "./controllers/commentLikeController";
-import { postLikeController } from "./controllers/postLikeController";
-import { homepageController } from "./controllers/homepageController";
-import { getPostController } from "./controllers/postController";
-import { jwtSign } from "./utils/helper";
+import { router } from "./routes/index.js";
+import { prisma } from "./lib/prisma.js";
+import { loginController } from "./controllers/loginController.js";
+import * as signup from "./controllers/signupController.js";
+import { commentController } from "./controllers/commentController.js";
+import { commentLikeController } from "./controllers/commentLikeController.js";
+import { postLikeController } from "./controllers/postLikeController.js";
+import { homepageController } from "./controllers/homepageController.js";
+import { getPostController } from "./controllers/postController.js";
+import { jwtSign } from "./utils/helper.js";
 
 const app = express();
 

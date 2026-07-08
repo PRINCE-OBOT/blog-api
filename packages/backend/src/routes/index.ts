@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import * as post from "../controllers/postController";
-import { homepageController } from "../controllers/homepageController";
+import * as post from "../controllers/postController.js";
+import { homepageController } from "../controllers/homepageController.js";
 
 const router = Router();
 
