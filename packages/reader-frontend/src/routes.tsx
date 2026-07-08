@@ -1,6 +1,7 @@
-import PostList from './pages/PostList'
-import PostDetail from './pages/PostDetail'
-import App from './App';
+import PostList from "./pages/PostList";
+import PostDetail from "./pages/PostDetail";
+import NotFoundPage from "./components/NotFoundPage";
+import App from "./App";
 
 const routes = [
   {
@@ -15,6 +16,10 @@ const routes = [
         element: <PostDetail />
       }
     ]
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />
   }
 ];
 
