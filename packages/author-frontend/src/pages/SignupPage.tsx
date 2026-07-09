@@ -36,7 +36,7 @@ export default function SignupPage() {
 
     if (!firstName.trim()) newErrors.firstName = "Required";
     if (!lastName.trim()) newErrors.lastName = "Required";
-    if (!username.trim()) newErrors.username = "Required";
+    if (username.trim().length < 5) newErrors.username = "Username must be at least 5 characters";
     if (password.length < 6) newErrors.password = "At least 6 characters";
     if (fields.password !== fields.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";

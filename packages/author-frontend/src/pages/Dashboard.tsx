@@ -98,7 +98,7 @@ export default function Dashboard() {
             key={label}
             className={`p-5 ${i < 2 ? "border-r border-border" : ""}`}
           >
-            <p className="font-display text-[10px] font-semibold tracking-[0.12em] uppercase text-slate mb-1">
+            <p className="font-display break-words text-wrap text-[10px] font-semibold tracking-[0.12em] uppercase text-slate mb-1">
               {label}
             </p>
             <p

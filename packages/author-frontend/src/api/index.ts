@@ -32,12 +32,11 @@ async function request<T>(
       headers.set("Authorization", `Bearer ${token}`);
     }
   }
-
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,
     headers
   });
-
+  
   if (!res.ok) {
     const err = (await res.json().catch(() => ({}))) as { message?: string };
     throw new Error(err.message ?? `Request failed: ${res.status}`);
