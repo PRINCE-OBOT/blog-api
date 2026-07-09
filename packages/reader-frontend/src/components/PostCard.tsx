@@ -1,17 +1,14 @@
-import { MessageCircle, HeartPlus } from 'lucide-react'
+import { MessageCircle, HeartPlus } from "lucide-react";
 import type { Author, Post } from "../types";
-import { format } from 'date-fns';
-import { NavLink } from 'react-router';
-
+import { format } from "date-fns";
+import { NavLink } from "react-router";
 
 interface PostCardProps {
   post: Post;
   onSelect: (id: string) => void;
 }
 
-export default function PostCard({
-  post,
-}: PostCardProps) {
+export default function PostCard({ post }: PostCardProps) {
   const {
     id,
     title,
@@ -41,24 +38,20 @@ export default function PostCard({
       role="button"
       aria-label={`Read: ${title}`}
     >
-      <div
-        className={`p-3 flex flex-col gap-2 flex-1`}
-      >
+      <div className={`p-3 flex flex-col gap-2 flex-1`}>
         <div>
           <span className="text-slate text-xs font-display mt-1">By</span>{" "}
           <span>
             {firstName} {lastName}
           </span>
         </div>
-        <h2
+        <h1
           className={`font-display font-bold leading-tight tracking-tight text-parchment text-lg p-b-0`}
         >
           {title}
-        </h2>
+        </h1>
         {subtitle && (
-          <h4 className={`text-slate font-bold leading-tight pb-4`}>
-            {subtitle}
-          </h4>
+          <h4 className={`font-bold leading-tight pb-4`}>{subtitle}</h4>
         )}
         <p
           className="

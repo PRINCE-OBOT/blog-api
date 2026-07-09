@@ -32,6 +32,8 @@ export default function PostEditor() {
   const [success, setSuccess] = useState<string | null>(null);
   const [editorLoading, setEditorLoading] = useState(true);
 
+  console.log(import.meta.env.VITE_TINYMCE_API_KEY);
+
   useEffect(() => {
     if (isEditing) {
       getPost(postId || "")

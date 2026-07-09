@@ -22,34 +22,6 @@ export default function PostList() {
     }
   }, [posts]);
 
-  if (loading) {
-    return (
-      <StatusScreen>
-        <Spinner />
-      </StatusScreen>
-    );
-  }
-
-  if (error) {
-    return (
-      <StatusScreen>
-        <p className="text-like font-display text-sm">
-          Failed to load posts: {error}
-        </p>
-      </StatusScreen>
-    );
-  }
-
-  if (posts.length === 0) {
-    return (
-      <StatusScreen>
-        <p className="text-slate font-display text-sm">
-          No posts yet. Check back soon.
-        </p>
-      </StatusScreen>
-    );
-  }
-
   return (
     <>
       {/* Hero */}
@@ -80,11 +52,29 @@ export default function PostList() {
           Latest Posts
         </p>
 
-        <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(400px,100%),1fr))] border border-border p-2">
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} onSelect={onSelectPost} />
-          ))}
-        </div>
+        {loading ? (
+          <StatusScreen>
+            <Spinner />
+          </StatusScreen>
+        ) : error ? (
+          <StatusScreen>
+            <p className="text-like font-display text-sm">
+              Failed to load posts: {error}
+            </p>
+          </StatusScreen>
+        ) : posts.length === 0 ? (
+          <StatusScreen>
+            <p className="text-slate font-display text-sm">
+              No posts yet. Check back soon.
+            </p>
+          </StatusScreen>
+        ) : (
+          <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(400px,100%),1fr))] border border-border p-2">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} onSelect={onSelectPost} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
