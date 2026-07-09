@@ -32,7 +32,7 @@ const INVALID_LOGIN_MSG = "Invalid username or password";
 //     credentials: true
 //   })
 // );
-  
+
 app.use(
   cors({
     origin: true,
