@@ -41,7 +41,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
   const fullName = user ? `${user.firstName} ${user.lastName}` : "Author";
 
   return (
-    <aside className="w-[220px] bg-ink flex-shrink-0 border-r border-border flex flex-col h-screen">
+    <aside className="w-[220px] bg-ink flex-shrink-0 border-r border-border flex flex-col h-dvh">
 
       {/* Logo row */}
       <div className="px-5 h-[60px] flex items-center justify-between border-b border-border flex-shrink-0">
