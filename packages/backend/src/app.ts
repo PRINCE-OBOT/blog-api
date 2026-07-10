@@ -21,21 +21,14 @@ const app = express();
 
 const INVALID_LOGIN_MSG = "Invalid username or password";
 
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:5173", // frontend local dev
-//       "http://localhost:5174", // frontend local dev
-//       process.env.READER_FRONTEND_URL!, // frontend production
-//       process.env.AUTHOR_FRONTEND_URL! // frontend production
-//     ],
-//     credentials: true
-//   })
-// );
-
 app.use(
   cors({
-    origin: true,
+    origin: [
+      "http://localhost:5173", // frontend local dev
+      "http://localhost:5174", // frontend local dev
+      process.env.READER_FRONTEND_URL!, // frontend production
+      process.env.AUTHOR_FRONTEND_URL! // frontend production
+    ],
     credentials: true
   })
 );

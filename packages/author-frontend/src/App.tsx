@@ -33,7 +33,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-ink text-parchment font-body flex w-[min(1200px,100%)] mx-auto relative">
+    <div className="min-h-dvh bg-ink text-parchment font-body flex w-[min(1200px,100%)] mx-auto relative">
       {/* ── Mobile overlay backdrop ── */}
       {sidebarOpen && (
         <div
@@ -48,7 +48,7 @@ export default function App() {
             Mobile: fixed, slides in/out via translate  */}
       <div
         className={`
-          fixed z-30 top-0 left-0 h-full
+          fixed z-30 top-0 left-0 h-dvh
           transition-transform duration-300 ease-in-out
           lg:static lg:translate-x-0 lg:z-auto
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -58,7 +58,7 @@ export default function App() {
       </div>
 
       {/* ── Main area ── */}
-      <div className="flex-1 flex flex-col min-h-screen min-w-0">
+      <div className="flex-1 flex flex-col min-h-dvh min-w-0">
         {/* Top bar */}
         <header className="h-[60px] border-b border-border px-4 md:px-8 flex items-center gap-4 flex-shrink-0 sticky top-0 z-10 bg-ink">
           {/* Hamburger — mobile only */}
@@ -77,7 +77,7 @@ export default function App() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto max-h-screen scrollbar-hide">
+        <main className="flex-1 overflow-y-auto scrollbar-hide">
           <Outlet context={{}} />
         </main>
       </div>
